@@ -27,6 +27,11 @@ public class Task {
     @Setter
     private String description;
 
+    @Column(name = "salary")
+    @Getter
+    @Setter
+    private double salary;
+
     @Column(name = "deadline")
     @Getter
     @Setter

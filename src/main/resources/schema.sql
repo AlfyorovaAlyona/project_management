@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS tasks (
   name          VARCHAR(100) UNIQUE NOT NULL,
   project_id    BIGINT REFERENCES projects (id),
   description   VARCHAR(255),
-  --salary DOUBLE,
+  salary        FLOAT,
   deadline      DATE
 );
 
@@ -35,7 +35,7 @@ COMMENT ON COLUMN tasks.id IS 'Task''s identifier';
 COMMENT ON COLUMN tasks.name IS 'Task''s name';
 COMMENT ON COLUMN tasks.description IS 'Task''s description';
 COMMENT ON COLUMN tasks.deadline IS 'Task''s deadline';
---COMMENT ON COLUMN tasks.salary IS 'Salary for task';
+COMMENT ON COLUMN tasks.salary IS 'Salary for task';
 COMMENT ON COLUMN tasks.project_id IS 'Project of this task';
 
 CREATE SEQUENCE IF NOT EXISTS  task_id_sequence START WITH 1 MINVALUE 1 INCREMENT BY 1;
