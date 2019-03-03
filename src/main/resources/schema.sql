@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS users (
 
-  id       BIGINT PRIMARY KEY,
+  id            BIGINT PRIMARY KEY,
   email         VARCHAR(100) UNIQUE NOT NULL,
   name          VARCHAR(100)        NOT NULL,
   surname       VARCHAR(100)        NOT NULL,
@@ -22,12 +22,12 @@ CREATE SEQUENCE IF NOT EXISTS user_id_sequence START WITH 1 MINVALUE 1 INCREMENT
 COMMENT ON SEQUENCE user_id_sequence IS 'Sequence for identifiers of table ''users''';
 
 CREATE TABLE IF NOT EXISTS tasks (
-  id BIGINT PRIMARY KEY,
-  name VARCHAR(100) UNIQUE NOT NULL,
-  project_id BIGINT REFERENCES projects (id),
-  description VARCHAR(255),
+  id            BIGINT PRIMARY KEY,
+  name          VARCHAR(100) UNIQUE NOT NULL,
+  project_id    BIGINT REFERENCES projects (id),
+  description   VARCHAR(255),
   --salary DOUBLE,
-  deadline DATE
+  deadline      DATE
 );
 
 COMMENT ON TABLE tasks IS 'Table containing the application tasks'' data';
@@ -43,12 +43,12 @@ COMMENT ON SEQUENCE task_id_sequence IS 'Sequence for identifiers of table ''tas
 
 
 CREATE TABLE IF NOT EXISTS projects (
-  id BIGINT PRIMARY KEY,
-  name VARCHAR UNIQUE,
-  deadline DATE,
-  description VARCHAR(255),
+  id            BIGINT PRIMARY KEY,
+  name          VARCHAR UNIQUE,
+  deadline      DATE,
+  description   VARCHAR(255),
   --FOREIGN KEY
-  creator_id BIGINT NOT NULL REFERENCES users (id)
+  creator_id    BIGINT NOT NULL REFERENCES users (id)
 );
 
 
@@ -65,8 +65,8 @@ COMMENT ON SEQUENCE project_id_sequence IS 'Sequence for identifiers of table ''
 
 
 CREATE TABLE IF NOT EXISTS tasks_users (
-  user_id BIGINT  REFERENCES users (id),
-  task_id BIGINT  REFERENCES tasks (id),
+  user_id       BIGINT  REFERENCES users (id),
+  task_id       BIGINT  REFERENCES tasks (id),
   CONSTRAINT tasks_users_pk PRIMARY KEY (user_id, task_id)
 );
 
