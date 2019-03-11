@@ -1,14 +1,16 @@
-package com.mipt_project.dtos;
+package com.projectmanagement.dtos;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import java.util.List;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+
+import lombok.*;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@NoArgsConstructor
+@EqualsAndHashCode
 @ToString
 public class UserDto {
+
     @Getter
     @Setter
     private Long id;
@@ -36,6 +38,4 @@ public class UserDto {
     @Getter
     @Setter
     private List<TaskDto> taskDto;
-
-
 }

@@ -1,8 +1,8 @@
-package com.mipt_project.dtos;
+package com.projectmanagement.dtos;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.mipt_project.entities.enums.TaskStatus;
+import com.projectmanagement.entities.enums.TaskStatus;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

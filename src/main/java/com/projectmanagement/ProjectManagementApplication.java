@@ -1,13 +1,13 @@
-package com.mipt_project;
+package com.projectmanagement;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class MiptProjectApplication {
+public class ProjectManagementApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(MiptProjectApplication.class, args);
+        SpringApplication.run(ProjectManagementApplication.class, args);
     }
 
 }

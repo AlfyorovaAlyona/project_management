@@ -1,6 +1,6 @@
-package com.mipt_project.daos;
+package com.projectmanagement.daos;
 
-import com.mipt_project.entities.Project;
+import com.projectmanagement.entities.Project;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

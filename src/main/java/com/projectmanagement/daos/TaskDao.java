@@ -1,5 +1,5 @@
-package com.mipt_project.daos;
-import com.mipt_project.entities.Task;
+package com.projectmanagement.daos;
+import com.projectmanagement.entities.Task;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
