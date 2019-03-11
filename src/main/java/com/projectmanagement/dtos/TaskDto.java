@@ -36,7 +36,7 @@ public class TaskDto {
 
     @Getter
     @Setter
-    private TaskStatus taskStatus;
+    private short statusCode;
 
     public TaskDto(Long id,   TaskStatus taskStatus, String description,
                    BigDecimal salary, Date deadline, Long projectId) {
@@ -45,25 +45,25 @@ public class TaskDto {
         this.description = description;
         this.projectId = projectId;
         this.salary = salary;
-        this.taskStatus = taskStatus;
+        this.statusCode = taskStatus.getValue();
     }
 
     public TaskDto(Long projectId,     TaskStatus taskStatus,
                    String description, Date deadline) {
         this.projectId = projectId;
-        this.taskStatus = taskStatus;
+        this.statusCode = taskStatus.getValue();
         this.deadline = deadline;
         this.description = description;
     }
 
     @JsonIgnore
     public TaskStatus getStatus() {
-        return this.taskStatus;
+        return TaskStatus.parse(this.statusCode);
     }
 
     @JsonIgnore
     public void setStatus(TaskStatus taskStatus) {
-        this.taskStatus = taskStatus;
+        this.statusCode = taskStatus.getValue();
     }
 
     //public TaskDto(Long id, )
