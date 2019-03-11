@@ -5,6 +5,7 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Date;
 
+import com.projectmanagement.entities.enums.ProjectStatus;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -43,9 +44,15 @@ public class Project {
     private String description;
 
     @Column(name = "status_code")
-    @Getter
-    @Setter
     private short statusCode;
+
+    public void setStatus(ProjectStatus projectStatus) {
+        this.statusCode = projectStatus.getValue();
+    }
+
+    public ProjectStatus getStatus() {
+        return ProjectStatus.parse(this.statusCode);
+    }
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "project") //lazy
     @Getter

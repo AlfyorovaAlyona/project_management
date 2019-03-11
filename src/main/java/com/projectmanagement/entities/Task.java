@@ -6,13 +6,14 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Date;
 
+import com.projectmanagement.entities.enums.TaskStatus;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 @Entity
 @Table (name = "tasks")
-@ToString (exclude = "projects")
+@ToString //exclude?
 public class Task {
 
     @Id
@@ -50,9 +51,15 @@ public class Task {
     private Long projectId;
 
     @Column(name = "status_code")
-    @Getter
-    @Setter
     private short statusCode;
+
+    public void setStatus(TaskStatus projectStatus) {
+        this.statusCode = projectStatus.getValue();
+    }
+
+    public TaskStatus getStatus() {
+        return TaskStatus.parse(this.statusCode);
+    }
 
     @ManyToOne(fetch = FetchType.LAZY)
     // JoinColumn indicates that this entity is the owner of the relationship

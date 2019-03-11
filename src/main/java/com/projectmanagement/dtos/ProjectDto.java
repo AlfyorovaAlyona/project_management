@@ -64,8 +64,10 @@ public class ProjectDto {
         this.statusCode = projectStatus.getValue();
     }
 
-    //@JsonIgnore
-    //public ProjectStatus getStatus() { }
+    @JsonIgnore
+    public ProjectStatus getStatus() {
+        return ProjectStatus.parse(this.statusCode);
+    }
 
     @JsonIgnore
     public void setStatus(ProjectStatus projectStatus) {

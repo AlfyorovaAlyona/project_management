@@ -17,4 +17,20 @@ public enum ProjectStatus {
         return value;
     }
 
+    public static ProjectStatus parse(short projectStatusCode) {
+        ProjectStatus projectStatus = null;
+        for (ProjectStatus item : ProjectStatus.values()) {
+            if (item.getValue() == projectStatusCode) {
+                projectStatus = item;
+                break;
+            }
+        }
+
+        if (projectStatus == null) {
+            //throw new TaskStatusException(Constants.NO_SUCH_TASK_STATUS + taskStatusCode);
+        }
+
+        return projectStatus;
+    }
+
 }

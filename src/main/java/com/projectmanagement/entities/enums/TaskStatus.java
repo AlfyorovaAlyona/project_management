@@ -29,7 +29,7 @@ public enum TaskStatus {
      */
 
 //todo требует Constants, описываемые в common
-/*    public static TaskStatus parse(short taskStatusCode) {
+   public static TaskStatus parse(short taskStatusCode) {
         TaskStatus taskStatus = null;
         for (TaskStatus item : TaskStatus.values()) {
             if (item.getValue() == taskStatusCode) {
@@ -39,9 +39,9 @@ public enum TaskStatus {
         }
 
         if (taskStatus == null) {
-            throw new TaskStatusException(Constants.NO_SUCH_TASK_STATUS + taskStatusCode);
+            //throw new TaskStatusException(Constants.NO_SUCH_TASK_STATUS + taskStatusCode);
         }
 
         return taskStatus;
-    } */
+    }
 }
