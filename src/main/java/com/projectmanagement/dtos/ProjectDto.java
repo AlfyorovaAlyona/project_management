@@ -6,12 +6,14 @@ import com.projectmanagement.entities.enums.ProjectStatus;
 
 import java.util.List;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 import java.util.Date;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@NoArgsConstructor
 @ToString
 public class ProjectDto {
 
@@ -37,7 +39,7 @@ public class ProjectDto {
 
     @Getter
     @Setter
-    private ProjectStatus projectStatus;
+    private short statusCode;
 
     @Setter
     @Getter
@@ -50,7 +52,7 @@ public class ProjectDto {
         this.description = description;
         this.id = id;
         this.name = name;
-        this.projectStatus = projectStatus;
+        this.statusCode = projectStatus.getValue();
     }
 
     public ProjectDto(Long creatorId,     String name,  Date deadline,
@@ -59,16 +61,15 @@ public class ProjectDto {
         this.deadline = deadline;
         this.description = description;
         this.name = name;
-        this.projectStatus = projectStatus;
+        this.statusCode = projectStatus.getValue();
     }
-    @JsonIgnore
-    public ProjectStatus getStatus() {
-        return this.projectStatus;
-    }
+
+    //@JsonIgnore
+    //public ProjectStatus getStatus() { }
 
     @JsonIgnore
     public void setStatus(ProjectStatus projectStatus) {
-        this.projectStatus = projectStatus;
+        this.statusCode = projectStatus.getValue();
     }
 
 }

@@ -38,4 +38,11 @@ public class UserDto {
     @Getter
     @Setter
     private List<TaskDto> taskDto;
+
+    public UserDto(Long id, String email, String name, String surname) {
+        this.id = id;
+        this.name = name;
+        this.surname = surname;
+        this.email = email;
+    }
 }

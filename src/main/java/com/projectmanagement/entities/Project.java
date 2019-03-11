@@ -11,7 +11,7 @@ import lombok.ToString;
 
 @Entity
 @Table (name = "projects")
-@ToString (exclude = "users")
+@ToString //exclude?
 public class Project {
     @Id
     @Column(name = "id")
@@ -42,7 +42,14 @@ public class Project {
     @Setter
     private String description;
 
+    @Column(name = "status_code")
+    @Getter
+    @Setter
+    private short statusCode;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "project") //lazy
+    @Getter
+    @Setter
     private List<Task> tasks;
 
     @ManyToOne(fetch = FetchType.LAZY)

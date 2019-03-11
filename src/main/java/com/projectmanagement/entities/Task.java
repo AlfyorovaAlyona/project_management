@@ -49,6 +49,11 @@ public class Task {
     @Setter
     private Long projectId;
 
+    @Column(name = "status_code")
+    @Getter
+    @Setter
+    private short statusCode;
+
     @ManyToOne(fetch = FetchType.LAZY)
     // JoinColumn indicates that this entity is the owner of the relationship
     // (that is: the corresponding table has a column with a foreign key to the

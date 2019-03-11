@@ -24,6 +24,7 @@ COMMENT ON SEQUENCE user_id_sequence IS 'Sequence for identifiers of table ''use
 CREATE TABLE IF NOT EXISTS tasks (
   id            BIGINT PRIMARY KEY,
   name          VARCHAR(100) UNIQUE NOT NULL,
+  status_code   SMALLINT,
   project_id    BIGINT REFERENCES projects (id),
   description   VARCHAR(255),
   salary        NUMERIC,
@@ -47,6 +48,7 @@ CREATE TABLE IF NOT EXISTS projects (
   name          VARCHAR UNIQUE,
   deadline      DATE,
   description   VARCHAR(255),
+  status_code   SMALLINT,
   --FOREIGN KEY
   creator_id    BIGINT NOT NULL REFERENCES users (id)
 );
