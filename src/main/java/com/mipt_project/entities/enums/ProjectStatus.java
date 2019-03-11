@@ -1,4 +1,4 @@
-package com.myproject.entities.enums;
+package com.mipt_project.entities.enums;
 
 public enum ProjectStatus {
     OPEN((short) 0),

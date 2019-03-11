@@ -1,4 +1,4 @@
-package com.myproject.dtos;
+package com.mipt_project.dtos;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import java.util.List;

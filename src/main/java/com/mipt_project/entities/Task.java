@@ -1,4 +1,4 @@
-package com.myproject.entities;
+package com.mipt_project.entities;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;

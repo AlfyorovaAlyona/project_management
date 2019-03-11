@@ -1,4 +1,4 @@
-package com.myproject.entities.enums;
+package com.mipt_project.entities.enums;
 
 public enum TaskStatus {
     NOT_STARTED((short) 0),
