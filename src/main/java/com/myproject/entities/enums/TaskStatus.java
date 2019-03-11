@@ -1,11 +1,9 @@
-package com.myproject.entities.Enums;
-
-
+package com.myproject.entities.enums;
 
 public enum TaskStatus {
-    NOTGIVEN((short) 0),
-    NOTSTARTED((short) 1),
-    READY((short) 2);
+    NOT_STARTED((short) 0),
+    IN_PROGRESS((short) 1),
+    DONE((short) 2);
 
     private short value;
 
@@ -14,8 +12,9 @@ public enum TaskStatus {
     }
 
     /**
-     * @return short int code of order status.
+     * @return short int code of task status.
      */
+
     public short getValue() {
         return value;
     }
@@ -25,24 +24,24 @@ public enum TaskStatus {
      * Translates a short int status code to an object representing
      * an status.
      *
-     * @param orderStatusCode short int code of order status
+     * @param taskStatusCode short int code of task status
      * @return an object of this class representing one of possible states
      */
 
 //todo требует Constants, описываемые в common
-/*    public static TaskStatus parse(short orderStatusCode) {
-        TaskStatus orderStatus = null;
+/*    public static TaskStatus parse(short taskStatusCode) {
+        TaskStatus taskStatus = null;
         for (TaskStatus item : TaskStatus.values()) {
-            if (item.getValue() == orderStatusCode) {
-                orderStatus = item;
+            if (item.getValue() == taskStatusCode) {
+                taskStatus = item;
                 break;
             }
         }
 
-        if (orderStatus == null) {
-            throw new TaskStatusException(Constants.NO_SUCH_ORDER_STATUS + orderStatusCode);
+        if (taskStatus == null) {
+            throw new TaskStatusException(Constants.NO_SUCH_TASK_STATUS + taskStatusCode);
         }
 
-        return orderStatus;
+        return taskStatus;
     } */
 }

@@ -1,7 +1,7 @@
 package com.myproject.dtos;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.sun.tools.javac.util.List;
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

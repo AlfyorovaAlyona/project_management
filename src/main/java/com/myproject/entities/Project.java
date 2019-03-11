@@ -10,7 +10,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Table (name = "project")
+@Table (name = "projects")
 @ToString (exclude = "users")
 public class Project {
     @Id

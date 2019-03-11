@@ -2,6 +2,7 @@ package com.myproject.entities;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Date;
 
@@ -27,10 +28,15 @@ public class Task {
     @Setter
     private String description;
 
+    @Column(name = "name")
+    @Getter
+    @Setter
+    private String name;
+
     @Column(name = "salary")
     @Getter
     @Setter
-    private double salary;
+    private BigDecimal salary;
 
     @Column(name = "deadline")
     @Getter

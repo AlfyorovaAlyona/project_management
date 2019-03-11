@@ -2,11 +2,12 @@ package com.myproject.dtos;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.myproject.entities.Enums.TaskStatus;
+import com.myproject.entities.enums.TaskStatus;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -23,7 +24,7 @@ public class TaskDto {
 
     @Getter
     @Setter
-    private double salary;
+    private BigDecimal salary;
 
     @Getter
     @Setter
@@ -35,32 +36,34 @@ public class TaskDto {
 
     @Getter
     @Setter
-    private TaskStatus statusTask;
+    private TaskStatus taskStatus;
 
-    public TaskDto(TaskStatus taskStatus, Long id, String description, double salary, Date deadline, Long projectId){
+    public TaskDto(Long id,   TaskStatus taskStatus, String description,
+                   BigDecimal salary, Date deadline, Long projectId) {
+        this.id = id;
         this.deadline = deadline;
         this.description = description;
-        this.id = id;
         this.projectId = projectId;
         this.salary = salary;
-        this.statusTask = taskStatus;
+        this.taskStatus = taskStatus;
     }
 
-    public TaskDto(TaskStatus taskStatus, String description, Date deadline, Long projectId){
+    public TaskDto(Long projectId,     TaskStatus taskStatus,
+                   String description, Date deadline) {
+        this.projectId = projectId;
+        this.taskStatus = taskStatus;
         this.deadline = deadline;
         this.description = description;
-        this.projectId = projectId;
-        this.statusTask = taskStatus;
     }
 
     @JsonIgnore
     public TaskStatus getStatus() {
-        return this.statusTask;
+        return this.taskStatus;
     }
 
     @JsonIgnore
     public void setStatus(TaskStatus taskStatus) {
-        this.statusTask = taskStatus;
+        this.taskStatus = taskStatus;
     }
 
     //public TaskDto(Long id, )

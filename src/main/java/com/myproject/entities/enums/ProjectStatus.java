@@ -1,8 +1,8 @@
-package com.myproject.entities.Enums;
+package com.myproject.entities.enums;
 
 public enum ProjectStatus {
     OPEN((short) 0),
-    CLOSE((short) 1);
+    FINISHED((short) 1);
 
     private short value;
 
@@ -11,12 +11,10 @@ public enum ProjectStatus {
     }
 
     /**
-     * @return short int code of order status.
+     * @return short int code of project status.
      */
     public short getValue() {
         return value;
     }
-
-
 
 }

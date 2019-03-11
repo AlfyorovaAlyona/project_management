@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS tasks (
   name          VARCHAR(100) UNIQUE NOT NULL,
   project_id    BIGINT REFERENCES projects (id),
   description   VARCHAR(255),
-  salary        FLOAT,
+  salary        NUMERIC,
   deadline      DATE
 );
 
