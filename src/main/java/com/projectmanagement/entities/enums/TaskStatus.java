@@ -28,7 +28,7 @@ public enum TaskStatus {
      * @return an object of this class representing one of possible states
      */
 
-//todo требует Constants, описываемые в common
+    //todo требует Constants, описываемые в common
    public static TaskStatus parse(short taskStatusCode) {
         TaskStatus taskStatus = null;
         for (TaskStatus item : TaskStatus.values()) {

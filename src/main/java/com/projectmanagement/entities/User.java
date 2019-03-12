@@ -11,7 +11,7 @@ import java.util.List;
 
 @Entity
 @Table (name = "users")
-@ToString
+@ToString(exclude = {"tasks", "projects"})
 public class User {
 
     @Id
@@ -50,14 +50,14 @@ public class User {
     @Setter
     private String passwordSalt;
 
-    @ManyToMany(fetch = FetchType.LAZY, //??
+    @ManyToMany(fetch = FetchType.LAZY,
             cascade = {CascadeType.PERSIST, CascadeType.MERGE}) //?
     @JoinTable(name = "tasks_users",
-            joinColumns = {@JoinColumn(name = "task_id")}, //уточнить
+            joinColumns = {@JoinColumn(name = "task_id")},
             inverseJoinColumns = {@JoinColumn(name = "user_id")})
     private List<Task> tasks;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "creator")
     private List<Project> projects;
 
 }

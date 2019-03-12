@@ -12,7 +12,7 @@ import lombok.ToString;
 
 @Entity
 @Table (name = "projects")
-@ToString //exclude?
+@ToString(exclude = {"creator", "tasks"})
 public class Project {
     @Id
     @Column(name = "id")

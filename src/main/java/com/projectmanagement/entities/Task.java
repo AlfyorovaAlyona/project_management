@@ -13,7 +13,7 @@ import lombok.ToString;
 
 @Entity
 @Table (name = "tasks")
-@ToString //exclude?
+@ToString (exclude = {"project", "users"})
 public class Task {
 
     @Id
@@ -71,10 +71,10 @@ public class Task {
     @Setter
     private Project project;
 
-    @ManyToMany(fetch = FetchType.LAZY, //??
+    @ManyToMany(fetch = FetchType.LAZY,
             cascade = {CascadeType.PERSIST, CascadeType.MERGE}) //?
     @JoinTable(name = "tasks_users",
-            joinColumns = {@JoinColumn(name = "user_id")}, //уточнить
+            joinColumns = {@JoinColumn(name = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "task_id")})
     @Getter
     @Setter

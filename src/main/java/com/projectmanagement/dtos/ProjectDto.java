@@ -43,7 +43,7 @@ public class ProjectDto {
 
     @Setter
     @Getter
-    private List<TaskDto> taskDto;
+    private List<TaskDto> tasks;
 
     public ProjectDto(Long id,       Long creatorId,     String name,
                       Date deadline, String description, ProjectStatus projectStatus) {

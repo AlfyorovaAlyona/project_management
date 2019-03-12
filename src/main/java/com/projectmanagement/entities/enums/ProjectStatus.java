@@ -17,6 +17,7 @@ public enum ProjectStatus {
         return value;
     }
 
+    //todo требует Constants, описываемые в common
     public static ProjectStatus parse(short projectStatusCode) {
         ProjectStatus projectStatus = null;
         for (ProjectStatus item : ProjectStatus.values()) {

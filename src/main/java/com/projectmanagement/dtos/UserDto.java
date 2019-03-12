@@ -29,15 +29,7 @@ public class UserDto {
 
     @Getter
     @Setter
-    private String passwordHash;
-
-    @Getter
-    @Setter
-    private String passwordSalt;
-
-    @Getter
-    @Setter
-    private List<TaskDto> taskDto;
+    private List<TaskDto> tasks;
 
     public UserDto(Long id, String email, String name, String surname) {
         this.id = id;
