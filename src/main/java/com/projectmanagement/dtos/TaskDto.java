@@ -9,6 +9,7 @@ import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @ToString
@@ -38,10 +39,19 @@ public class TaskDto {
     @Setter
     private short statusCode;
 
-    public TaskDto(Long id,   TaskStatus taskStatus, String description,
+    @Getter
+    @Setter
+    private String name;
+
+    @Getter
+    @Setter
+    private List<UserDto> users; //предложить
+
+    public TaskDto(Long id, String name,  TaskStatus taskStatus, String description,
                    BigDecimal salary, Date deadline, Long projectId) {
         this.id = id;
         this.deadline = deadline;
+        this.name = name;
         this.description = description;
         this.projectId = projectId;
         this.salary = salary;

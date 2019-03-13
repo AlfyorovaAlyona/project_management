@@ -7,7 +7,6 @@ import lombok.*;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @NoArgsConstructor
-@EqualsAndHashCode
 @ToString
 public class UserDto {
 
@@ -31,10 +30,17 @@ public class UserDto {
     @Setter
     private List<TaskDto> tasks;
 
-    public UserDto(Long id, String email, String name, String surname) {
+    @Getter
+    @Setter
+    private List<ProjectDto> projects; //предложить
+
+    public UserDto(Long id, String email, String name, String surname,
+                   List<ProjectDto> projects, List<TaskDto> tasks) {
         this.id = id;
         this.name = name;
         this.surname = surname;
         this.email = email;
+        this.projects = projects;
+        this.tasks = tasks;
     }
 }

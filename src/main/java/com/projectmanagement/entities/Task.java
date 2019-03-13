@@ -53,12 +53,23 @@ public class Task {
     @Column(name = "status_code")
     private short statusCode;
 
-    public void setStatus(TaskStatus projectStatus) {
-        this.statusCode = projectStatus.getValue();
+    public void setStatus(TaskStatus taskStatus) {
+        this.statusCode = taskStatus.getValue();
     }
 
     public TaskStatus getStatus() {
         return TaskStatus.parse(this.statusCode);
+    }
+
+    public Task(Long id, String description, String name, BigDecimal salary, Date deadline,
+                Long projectId, TaskStatus taskStatus) {
+        this.id = id;
+        this.description = description;
+        this.deadline = deadline;
+        this.projectId = projectId;
+        this.name = name;
+        this.salary = salary;
+        this.statusCode = taskStatus.getValue();
     }
 
     @ManyToOne(fetch = FetchType.LAZY)

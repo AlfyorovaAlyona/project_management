@@ -55,9 +55,13 @@ public class User {
     @JoinTable(name = "tasks_users",
             joinColumns = {@JoinColumn(name = "task_id")},
             inverseJoinColumns = {@JoinColumn(name = "user_id")})
+    @Getter
+    @Setter
     private List<Task> tasks;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "creator")
+    @Getter
+    @Setter
     private List<Project> projects;
 
 }
