@@ -1,5 +1,8 @@
 package com.projectmanagement.entities.enums;
 
+import com.projectmanagement.common.Constants;
+import com.projectmanagement.common.utils.TaskStatusException;
+
 public enum TaskStatus {
     NOT_STARTED((short) 0),
     IN_PROGRESS((short) 1),
@@ -28,8 +31,7 @@ public enum TaskStatus {
      * @return an object of this class representing one of possible states
      */
 
-    //todo требует Constants, описываемые в common
-   public static TaskStatus parse(short taskStatusCode) {
+    public static TaskStatus parse(short taskStatusCode) {
         TaskStatus taskStatus = null;
         for (TaskStatus item : TaskStatus.values()) {
             if (item.getValue() == taskStatusCode) {
@@ -39,7 +41,7 @@ public enum TaskStatus {
         }
 
         if (taskStatus == null) {
-            //throw new TaskStatusException(Constants.NO_SUCH_TASK_STATUS + taskStatusCode);
+            throw new TaskStatusException(Constants.NO_SUCH_TASK_STATUS + taskStatusCode);
         }
 
         return taskStatus;

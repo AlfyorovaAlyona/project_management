@@ -1,5 +1,8 @@
 package com.projectmanagement.entities.enums;
 
+import com.projectmanagement.common.Constants;
+import com.projectmanagement.common.utils.ProjectStatusException;
+
 public enum ProjectStatus {
     OPEN((short) 0),
     FINISHED((short) 1);
@@ -13,11 +16,11 @@ public enum ProjectStatus {
     /**
      * @return short int code of project status.
      */
+
     public short getValue() {
         return value;
     }
 
-    //todo требует Constants, описываемые в common
     public static ProjectStatus parse(short projectStatusCode) {
         ProjectStatus projectStatus = null;
         for (ProjectStatus item : ProjectStatus.values()) {
@@ -28,7 +31,7 @@ public enum ProjectStatus {
         }
 
         if (projectStatus == null) {
-            //throw new TaskStatusException(Constants.NO_SUCH_TASK_STATUS + taskStatusCode);
+            throw new ProjectStatusException(Constants.NO_SUCH_PROJECT_STATUS + projectStatusCode);
         }
 
         return projectStatus;
