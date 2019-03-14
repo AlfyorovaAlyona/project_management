@@ -50,7 +50,8 @@ public class UserService {
 
     private List<ProjectDto> buildProjectDtoListFromProjectList(List<Project> projects) {
         return projects.stream().map(project -> new ProjectDto(project.getId(), project.getCreatorId(),
-                project.getName(), project.getDeadline(), project.getDescription(), project.getStatus()))
+                project.getName(), project.getDeadline(), project.getDescription(), project.getStatus(),
+                buildTaskDtoListFromTaskList(project.getTasks())))
                 .collect(Collectors.toList());
     }
 }

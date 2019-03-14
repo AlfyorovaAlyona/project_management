@@ -3,8 +3,8 @@ package com.projectmanagement.entities;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import java.util.Calendar;
 import java.util.List;
-import java.util.Date;
 
 import com.projectmanagement.entities.enums.TaskStatus;
 import lombok.Getter;
@@ -42,7 +42,7 @@ public class Task {
     @Column(name = "deadline")
     @Getter
     @Setter
-    private Date deadline;
+    private Calendar deadline; //может так задавать дату будет удобнее?
 
     @Column(name = "project_id")
     @NotNull
@@ -61,7 +61,7 @@ public class Task {
         return TaskStatus.parse(this.statusCode);
     }
 
-    public Task(Long id, String description, String name, BigDecimal salary, Date deadline,
+    public Task(Long id, String description, String name, BigDecimal salary, Calendar deadline,
                 Long projectId, TaskStatus taskStatus) {
         this.id = id;
         this.description = description;

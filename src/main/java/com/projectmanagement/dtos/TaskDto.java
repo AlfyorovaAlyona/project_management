@@ -3,15 +3,17 @@ package com.projectmanagement.dtos;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.projectmanagement.entities.enums.TaskStatus;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@EqualsAndHashCode
 @ToString
 public class TaskDto {
 
@@ -29,7 +31,7 @@ public class TaskDto {
 
     @Getter
     @Setter
-    private Date deadline;
+    private Calendar deadline;
 
     @Getter
     @Setter
@@ -43,12 +45,11 @@ public class TaskDto {
     @Setter
     private String name;
 
-    @Getter
-    @Setter
-    private List<UserDto> users; //предложить
+
+    //private List<UserDto> users; //предложить
 
     public TaskDto(Long id, String name,  TaskStatus taskStatus, String description,
-                   BigDecimal salary, Date deadline, Long projectId) {
+                   BigDecimal salary, Calendar deadline, Long projectId) {
         this.id = id;
         this.deadline = deadline;
         this.name = name;
@@ -58,11 +59,13 @@ public class TaskDto {
         this.statusCode = taskStatus.getValue();
     }
 
-    public TaskDto(Long projectId,     TaskStatus taskStatus,
-                   String description, Date deadline) {
-        this.projectId = projectId;
+    public TaskDto(Long id, String name,  TaskStatus taskStatus, String description,
+                   BigDecimal salary, Calendar deadline) {
+        this.id = id;
         this.statusCode = taskStatus.getValue();
         this.deadline = deadline;
+        this.name = name;
+        this.salary = salary;
         this.description = description;
     }
 

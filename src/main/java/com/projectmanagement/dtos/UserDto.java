@@ -7,6 +7,7 @@ import lombok.*;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @NoArgsConstructor
+@EqualsAndHashCode
 @ToString
 public class UserDto {
 

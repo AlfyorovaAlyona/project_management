@@ -1,5 +1,6 @@
 package com.projectmanagement.services;
 
+import com.projectmanagement.common.utils.*;
 import com.projectmanagement.daos.ProjectDao;
 import com.projectmanagement.dtos.ProjectDto;
 import com.projectmanagement.dtos.TaskDto;
@@ -12,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.projectmanagement.common.utils.ValidationUtils.validateIsNotNull;
+
 @Service
 @RequiredArgsConstructor
 public class ProjectService {
@@ -22,22 +25,27 @@ public class ProjectService {
         this.projectDao = projectDao;
     }
 
-    public ProjectDto get(Long projectId) {
+    public ProjectDto get(Long projectId) throws ValidationException {
+        /**
+         * Only not nulls can be projectId
+         */
+        validateIsNotNull(projectId, "projectId == NULL!!!");
+
         Project project = projectDao.findOne(projectId);
+
+        /**If the project with id = projectId exists
+         * then we build a projectDto from this Project
+         */
+        validateIsNotNull(project, "No project with id = " + projectId);
 
         return buildProjectDtoFromProject(project);
     }
 
     private ProjectDto buildProjectDtoFromProject(Project project) {
-        ProjectDto projectDto = new ProjectDto();
-        projectDto.setId(project.getId());
-        projectDto.setName(project.getName());
-        projectDto.setCreatorId(project.getCreatorId());
-        projectDto.setDeadline(project.getDeadline());
-        projectDto.setDescription(project.getDescription());
-        projectDto.setStatus(project.getStatus());
-        projectDto.setTasks(buildTaskDtoListFromTaskList(project.getTasks()));
-        return projectDto;
+        return new ProjectDto(project.getId(), project.getCreatorId(), project.getName(),
+                project.getDeadline(), project.getDescription(), project.getStatus(),
+                buildTaskDtoListFromTaskList(project.getTasks()));
+
     }
 
     private List<TaskDto> buildTaskDtoListFromTaskList(List<Task> tasks) {

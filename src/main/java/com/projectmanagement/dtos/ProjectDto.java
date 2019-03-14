@@ -4,16 +4,15 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.projectmanagement.entities.enums.ProjectStatus;
 
+import java.util.Calendar;
 import java.util.List;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
-import java.util.Date;
+import lombok.*;
+
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @NoArgsConstructor
+@EqualsAndHashCode
 @ToString
 public class ProjectDto {
 
@@ -31,7 +30,7 @@ public class ProjectDto {
 
     @Getter
     @Setter
-    private Date deadline;
+    private Calendar deadline;
 
     @Getter
     @Setter
@@ -46,17 +45,21 @@ public class ProjectDto {
     private List<TaskDto> tasks;
 
     public ProjectDto(Long id,       Long creatorId,     String name,
-                      Date deadline, String description, ProjectStatus projectStatus) {
+                      Calendar deadline, String description, ProjectStatus projectStatus,
+                      List<TaskDto> tasks) {
         this.creatorId = creatorId;
         this.deadline = deadline;
         this.description = description;
         this.id = id;
         this.name = name;
         this.statusCode = projectStatus.getValue();
+        this.tasks = tasks;
+
     }
 
-    public ProjectDto(Long creatorId,     String name,  Date deadline,
-                      String description, ProjectStatus projectStatus) {
+    public ProjectDto(Long creatorId,     String name,
+                      Calendar deadline, String description, ProjectStatus projectStatus,
+                      List<TaskDto> tasks) {
         this.creatorId = creatorId;
         this.deadline = deadline;
         this.description = description;

@@ -2,15 +2,17 @@ package com.projectmanagement.entities;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.Calendar;
 import java.util.List;
-import java.util.Date;
 
 import com.projectmanagement.entities.enums.ProjectStatus;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 @Entity
+@NoArgsConstructor
 @Table (name = "projects")
 @ToString(exclude = {"creator", "tasks"})
 public class Project {
@@ -36,7 +38,7 @@ public class Project {
     @Column(name = "deadline")
     @Getter
     @Setter
-    private Date deadline;
+    private Calendar deadline;
 
     @Column(name = "description")
     @Getter
@@ -58,6 +60,18 @@ public class Project {
     @Getter
     @Setter
     private List<Task> tasks;
+
+    public Project(Long id, Long creatorId, String name, Calendar deadline, String description,
+                   ProjectStatus projectStatus, List<Task> tasks) {
+        this.id = id;
+        this.creatorId = creatorId;
+        this.name = name;
+        this.deadline = deadline;
+        this.description = description;
+        this.statusCode = projectStatus.getValue();
+        this.tasks = tasks;
+
+    }
 
     @ManyToOne(fetch = FetchType.LAZY)
     // JoinColumn indicates that this entity is the owner of the relationship
