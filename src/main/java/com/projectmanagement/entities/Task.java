@@ -7,11 +7,13 @@ import java.util.Calendar;
 import java.util.List;
 
 import com.projectmanagement.entities.enums.TaskStatus;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 @Entity
+@EqualsAndHashCode
 @Table (name = "tasks")
 @ToString (exclude = {"project", "users"})
 public class Task {
@@ -61,8 +63,8 @@ public class Task {
         return TaskStatus.parse(this.statusCode);
     }
 
-    public Task(Long id, String description, String name, BigDecimal salary, Calendar deadline,
-                Long projectId, TaskStatus taskStatus) {
+    public Task(Long id, String name,  TaskStatus taskStatus, String description,
+                BigDecimal salary, Calendar deadline, Long projectId) {
         this.id = id;
         this.description = description;
         this.deadline = deadline;

@@ -9,7 +9,6 @@ import java.util.List;
 
 import lombok.*;
 
-
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @NoArgsConstructor
 @EqualsAndHashCode
@@ -65,6 +64,7 @@ public class ProjectDto {
         this.description = description;
         this.name = name;
         this.statusCode = projectStatus.getValue();
+        this.tasks = tasks;
     }
 
     @JsonIgnore

@@ -6,12 +6,10 @@ import java.util.Calendar;
 import java.util.List;
 
 import com.projectmanagement.entities.enums.ProjectStatus;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @Entity
+@EqualsAndHashCode
 @NoArgsConstructor
 @Table (name = "projects")
 @ToString(exclude = {"creator", "tasks"})

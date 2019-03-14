@@ -17,7 +17,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.math.BigDecimal;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -45,18 +44,17 @@ public class ProjectServiceTest {
 
     @Test
     public void getTest() throws ValidationException {
+        Task task1 = new Task(1L,"good task", TaskStatus.NOT_STARTED,
+                "do nothing", BigDecimal.ONE, null, 1L);
 
-        Task task1 = new Task(1L, "do nothing", "good task",
-                 BigDecimal.ONE, null, 1L, TaskStatus.NOT_STARTED);
-
-        Task task2 = new Task(2L, "do something", "bad task",
-                BigDecimal.ONE, null, 1L, TaskStatus.IN_PROGRESS);
+        Task task2 = new Task(2L,"bad task", TaskStatus.IN_PROGRESS,
+                "do something", BigDecimal.ONE, null, 1L);
         List<Task> tasks = List.of(task1, task2);
         Project project = new Project(1L,1L, "proj",
                 null, "", ProjectStatus.OPEN, tasks);
         given(projectDao.findOne(1L)).willReturn(project);
 
-
+        /////
         ProjectDto actualProjectDto = projectService.get(1L);
         TaskDto taskDto1 = new TaskDto(1L,"good task", TaskStatus.NOT_STARTED,
                 "do nothing", BigDecimal.ONE, null, 1L);
@@ -70,4 +68,57 @@ public class ProjectServiceTest {
 
         assertThat(actualProjectDto).isEqualTo(expectedProjectDto);
     }
+
+    @Test(expected = ValidationException.class)
+    public void nullProjectCreateTest() throws ValidationException {
+        projectService.create(null);
+    }
+
+    @Test(expected = ValidationException.class)
+    public void nullCreatorIdCreateTest() throws ValidationException {
+        projectService.create(new ProjectDto(1L, null, "",
+                null, "", ProjectStatus.OPEN, null));
+    }
+
+    @Test(expected = ValidationException.class)
+    public void nullProjectIdCreateTest() throws ValidationException {
+        projectService.create(new ProjectDto(null, 1L, "",
+                null, "", ProjectStatus.OPEN, null));
+    }
+
+    @Test
+    public void createTest() throws ValidationException {
+        TaskDto taskDto1 = new TaskDto(1L,"", TaskStatus.NOT_STARTED,
+                "", BigDecimal.ONE, null, 1L);
+        TaskDto taskDto2 = new TaskDto(2L,"", TaskStatus.NOT_STARTED,
+                "", BigDecimal.ONE, null, 1L);
+        List<TaskDto> taskDtos = List.of(taskDto1, taskDto2);
+        ProjectDto projectDto = new ProjectDto(1L, 3L, "t",
+                null, "t", ProjectStatus.OPEN, taskDtos);
+        Project actualProject = projectService.create(projectDto);
+        //todo change it
+        actualProject.setId(1L);
+
+        Task task1 = new Task(1L,"", TaskStatus.NOT_STARTED,
+                "", BigDecimal.ONE, null, 1L);
+        Task task2 = new Task(2L,"", TaskStatus.NOT_STARTED,
+                "", BigDecimal.ONE, null, 1L);
+        List<Task> tasks = List.of(task1, task2);
+
+        Project expectedProject = new Project(1L, 3L, "t",
+                null, "t", ProjectStatus.OPEN, tasks);
+
+        assertThat(actualProject).isEqualTo(expectedProject);
+    }
+
 }
+
+
+
+
+
+
+
+
+
+

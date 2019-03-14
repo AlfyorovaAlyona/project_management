@@ -27,7 +27,7 @@ public class ProjectService {
 
     public ProjectDto get(Long projectId) throws ValidationException {
         /**
-         * Only not nulls can be projectId
+         * Creating project with null id is unacceptable
          */
         validateIsNotNull(projectId, "projectId == NULL!!!");
 
@@ -54,7 +54,15 @@ public class ProjectService {
                 .collect(Collectors.toList());
     }
 
-    public Project create(ProjectDto projectDto) {
+    public Project create(ProjectDto projectDto) throws ValidationException {
+        /**
+         * Creating Dto with null id is unacceptable
+         */
+        validateIsNotNull(projectDto, "projectDto is NULL!!!");
+        validateIsNotNull(projectDto.getId(), "projectDto ID is NULL!!!");
+
+        validateIsNotNull(projectDto.getCreatorId(), "No creator of that project!");
+
         if (projectDto.getTasks() == null) {
             projectDto.setTasks(new ArrayList<>());
         }
@@ -67,6 +75,9 @@ public class ProjectService {
 
     private Project buildProjectFromProjectDto(ProjectDto projectDto) {
         Project project = new Project();
+        project.setName(projectDto.getName());
+        project.setDescription(projectDto.getDescription());
+        project.setDeadline(projectDto.getDeadline());
         project.setStatus(projectDto.getStatus());
         project.setCreatorId(projectDto.getCreatorId());
         project.setTasks(buildTaskListFromTaskDtoList(projectDto.getTasks()));
@@ -74,9 +85,9 @@ public class ProjectService {
     }
 
     private List<Task> buildTaskListFromTaskDtoList(List<TaskDto> tasksDto) {
-        return tasksDto.stream().map(task -> new Task(task.getId(), task.getDescription(),
-                task.getName(), task.getSalary(), task.getDeadline(), task.getProjectId(),
-                task.getStatus())).collect(Collectors.toList());
+        return tasksDto.stream().map(task -> new Task(task.getId(), task.getName(),
+                task.getStatus(), task.getDescription(), task.getSalary(), task.getDeadline(),
+                task.getProjectId())).collect(Collectors.toList());
     }
 
 }

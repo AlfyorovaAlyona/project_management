@@ -3,6 +3,7 @@ package com.projectmanagement.entities;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -10,6 +11,7 @@ import lombok.ToString;
 import java.util.List;
 
 @Entity
+@EqualsAndHashCode
 @Table (name = "users")
 @ToString(exclude = {"tasks", "projects"})
 public class User {
