@@ -36,7 +36,7 @@ public class UserDto {
     private List<ProjectDto> projects; //предложить
 
     public UserDto(Long id, String email, String name, String surname,
-                   List<ProjectDto> projects, List<TaskDto> tasks) {
+                    List<TaskDto> tasks, List<ProjectDto> projects) {
         this.id = id;
         this.name = name;
         this.surname = surname;

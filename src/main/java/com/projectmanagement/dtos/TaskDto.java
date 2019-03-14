@@ -78,7 +78,4 @@ public class TaskDto {
     public void setStatus(TaskStatus taskStatus) {
         this.statusCode = taskStatus.getValue();
     }
-
-    //public TaskDto(Long id, )
-
 }

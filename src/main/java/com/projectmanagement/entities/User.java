@@ -66,4 +66,14 @@ public class User {
     @Setter
     private List<Project> projects;
 
+    public User(Long id, String email, String name, String surname,
+                List<Task> tasks, List<Project> projects) {
+        this.id = id;
+        this.email = email;
+        this.name = name;
+        this.surname = surname;
+        this.tasks = tasks;
+        this.projects = projects;
+    }
+
 }

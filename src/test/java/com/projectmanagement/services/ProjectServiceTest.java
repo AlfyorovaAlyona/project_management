@@ -54,7 +54,8 @@ public class ProjectServiceTest {
                 null, "", ProjectStatus.OPEN, tasks);
         given(projectDao.findOne(1L)).willReturn(project);
 
-        /////
+        //------//
+
         ProjectDto actualProjectDto = projectService.get(1L);
         TaskDto taskDto1 = new TaskDto(1L,"good task", TaskStatus.NOT_STARTED,
                 "do nothing", BigDecimal.ONE, null, 1L);
@@ -93,8 +94,8 @@ public class ProjectServiceTest {
         TaskDto taskDto2 = new TaskDto(2L,"", TaskStatus.NOT_STARTED,
                 "", BigDecimal.ONE, null, 1L);
         List<TaskDto> taskDtos = List.of(taskDto1, taskDto2);
-        ProjectDto projectDto = new ProjectDto(1L, 3L, "t",
-                null, "t", ProjectStatus.OPEN, taskDtos);
+        ProjectDto projectDto = new ProjectDto(1L, 3L, "",
+                null, "", ProjectStatus.OPEN, taskDtos);
         Project actualProject = projectService.create(projectDto);
         //todo change it
         actualProject.setId(1L);
@@ -105,8 +106,8 @@ public class ProjectServiceTest {
                 "", BigDecimal.ONE, null, 1L);
         List<Task> tasks = List.of(task1, task2);
 
-        Project expectedProject = new Project(1L, 3L, "t",
-                null, "t", ProjectStatus.OPEN, tasks);
+        Project expectedProject = new Project(1L, 3L, "",
+                null, "", ProjectStatus.OPEN, tasks);
 
         assertThat(actualProject).isEqualTo(expectedProject);
     }

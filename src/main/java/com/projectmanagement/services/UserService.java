@@ -1,5 +1,6 @@
 package com.projectmanagement.services;
 
+import com.projectmanagement.common.utils.ValidationException;
 import com.projectmanagement.daos.UserDao;
 import com.projectmanagement.dtos.ProjectDto;
 import com.projectmanagement.dtos.TaskDto;
@@ -12,6 +13,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.projectmanagement.common.utils.ValidationUtils.validateIsNotNull;
+
 @Service
 public class UserService {
     private UserDao userDao;
@@ -20,26 +23,39 @@ public class UserService {
         this.userDao = userDao;
     }
 
-    public UserDto getUser(Long userId) {
+    public UserDto getUser(Long userId) throws ValidationException {
+        /**
+         * Creating project with null id is unacceptable
+         */
+        validateIsNotNull(userId, "userId == NULL!!!");
+
         User user = userDao.findOne(userId);
+
+        /**If the user with id = userId exists
+         * then we build a userDto from this User
+         */
+        validateIsNotNull(user, "No project with id = " + userId);
 
         return buildUserDtoFromUser(user);
     }
 
-    public UserDto getUserByEmail(String userEmail) {
+    public UserDto getUserByEmail(String userEmail) throws ValidationException {
+        /**
+         * Creating user with null email is unacceptable
+         */
+        validateIsNotNull(userEmail, "userEmail == NULL!!!");
+
         User user = userDao.findByEmail(userEmail);
+
+        validateIsNotNull(user, "No user with userEmail" + userEmail);
+
         return buildUserDtoFromUser(user);
     }
 
     private UserDto buildUserDtoFromUser(User user) {
-        UserDto userDto = new UserDto();
-        userDto.setId(user.getId());
-        userDto.setName(user.getName());
-        userDto.setEmail(user.getEmail());
-        userDto.setSurname(user.getSurname());
-        userDto.setTasks(buildTaskDtoListFromTaskList(user.getTasks()));
-        userDto.setProjects(buildProjectDtoListFromProjectList(user.getProjects()));
-        return userDto;
+        return new UserDto(user.getId(), user.getEmail(), user.getName(), user.getSurname(),
+                buildTaskDtoListFromTaskList(user.getTasks()),
+                buildProjectDtoListFromProjectList(user.getProjects()));
     }
 
     private List<TaskDto> buildTaskDtoListFromTaskList(List<Task> tasks) {

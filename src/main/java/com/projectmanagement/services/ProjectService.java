@@ -68,7 +68,7 @@ public class ProjectService {
         }
 
         Project project = buildProjectFromProjectDto(projectDto);
-        projectDao.save(project); //нужно ли 2 раз сохранять
+        projectDao.save(project);
 
         return project;
     }
