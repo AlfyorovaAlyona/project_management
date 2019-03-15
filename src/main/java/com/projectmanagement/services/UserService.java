@@ -72,11 +72,12 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    public User createUser(UserDto userDto) throws ValidationException {
+    //todo написать addTask()
+
+    //todo пока не нужно
+    /*public User createUser(UserDto userDto) throws ValidationException {
         validateIsNotNull(userDto, "userDto == NULL!!!");
-        /**
-         * Creating Dto with null id, email, and surname is unacceptable
-         */
+
         validateIsNotNull(userDto.getId(), "UserId == NULL!!!");
         validateIsNotNull(userDto.getEmail(), "UserEmail == NULL!!!");
         validateIsNotNull(userDto.getName(), "UserName == NULL!!!");
@@ -109,5 +110,5 @@ public class UserService {
                 taskDto.getStatus(), taskDto.getDescription(), taskDto.getSalary(),
                 taskDto.getDeadline(), taskDto.getProjectId())).collect(Collectors.toList());
     }
-
+*/
 }
