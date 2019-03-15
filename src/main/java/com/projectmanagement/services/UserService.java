@@ -109,4 +109,5 @@ public class UserService {
                 taskDto.getStatus(), taskDto.getDescription(), taskDto.getSalary(),
                 taskDto.getDeadline(), taskDto.getProjectId())).collect(Collectors.toList());
     }
+
 }
