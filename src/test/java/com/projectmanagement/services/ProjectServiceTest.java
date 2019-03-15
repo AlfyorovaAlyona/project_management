@@ -97,6 +97,7 @@ public class ProjectServiceTest {
         ProjectDto projectDto = new ProjectDto(1L, 3L, "",
                 null, "", ProjectStatus.OPEN, taskDtos);
         Project actualProject = projectService.create(projectDto);
+
         //todo change it
         actualProject.setId(1L);
 

@@ -32,6 +32,53 @@ public class UserServiceTest {
 
     private UserService userService;
 
+    private List<Task> setTasks() {
+        Task task1 = new Task(1L,"good task", TaskStatus.NOT_STARTED,
+                "do nothing", BigDecimal.ONE, null, 1L);
+
+        Task task2 = new Task(2L,"bad task", TaskStatus.IN_PROGRESS,
+                "do something", BigDecimal.ONE, null, 1L);
+        return List.of(task1, task2);
+    }
+
+    private List<Project> setProjects() {
+        Task task1 = new Task(1L,"", TaskStatus.NOT_STARTED,
+                "do", BigDecimal.ONE, null, 1L);
+        Task task2 = new Task(2L,"", TaskStatus.IN_PROGRESS,
+                "do", BigDecimal.ONE, null, 2L);
+        List<Task> tasks1 = List.of(task1);
+        List<Task> tasks2 = List.of(task2);
+
+        Project project1 = new Project(1L,1L, "proj",
+                null, "", ProjectStatus.OPEN, tasks1);
+        Project project2 = new Project(2L,1L, "",
+                null, "", ProjectStatus.OPEN, tasks2);
+        return List.of(project1, project2);
+    }
+
+    private List<TaskDto> setTaskDtos() {
+        TaskDto taskDto1 = new TaskDto(1L,"good task", TaskStatus.NOT_STARTED,
+                "do nothing", BigDecimal.ONE, null, 1L);
+        TaskDto taskDto2 = new TaskDto(2L,"bad task", TaskStatus.IN_PROGRESS,
+                "do something", BigDecimal.ONE, null, 1L);
+        return List.of(taskDto1, taskDto2);
+    }
+
+    private List<ProjectDto> setProjectDtos() {
+        TaskDto taskDto1 = new TaskDto(1L,"", TaskStatus.NOT_STARTED,
+                "do", BigDecimal.ONE, null, 1L);
+        TaskDto taskDto2 = new TaskDto(2L,"", TaskStatus.IN_PROGRESS,
+                "do", BigDecimal.ONE, null, 2L);
+        List<TaskDto> taskDtos1 = List.of(taskDto1);
+        List<TaskDto> taskDtos2 = List.of(taskDto2);
+
+        ProjectDto projectDto1 = new ProjectDto(1L,1L, "proj",
+                null, "", ProjectStatus.OPEN, taskDtos1);
+        ProjectDto projectDto2 = new ProjectDto(2L,1L, "",
+                null, "", ProjectStatus.OPEN, taskDtos2);
+        return List.of(projectDto1, projectDto2);
+    }
+
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
@@ -45,41 +92,58 @@ public class UserServiceTest {
     }
 
     @Test
-    public void getUserTest() throws ValidationException {
-        Task task1 = new Task(1L,"good task", TaskStatus.NOT_STARTED,
-                "do nothing", BigDecimal.ONE, null, 1L);
+    public void getUserByIdAndByEmailTest() throws ValidationException {
+        User user = new User(1L, "@", "", "", setTasks(), setProjects());
 
-        Task task2 = new Task(2L,"bad task", TaskStatus.IN_PROGRESS,
-                "do something", BigDecimal.ONE, null, 1L);
-        List<Task> tasks = List.of(task1, task2);
-        Project project1 = new Project(1L,1L, "proj",
-                null, "", ProjectStatus.OPEN, tasks);
-        Project project2 = new Project(2L,1L, "",
-                null, "", ProjectStatus.OPEN, tasks);
-        List<Project> projects = List.of(project1, project2);
-        User user = new User(1L, "@", "", "", tasks, projects);
         given(userDao.findOne(1L)).willReturn(user);
+        given(userDao.findByEmail(user.getEmail())).willReturn(user);
 
         //------//
 
-        UserDto actualUserDto = userService.getUser(1L);
-        TaskDto taskDto1 = new TaskDto(1L,"good task", TaskStatus.NOT_STARTED,
-                "do nothing", BigDecimal.ONE, null, 1L);
-        TaskDto taskDto2 = new TaskDto(2L,"bad task", TaskStatus.IN_PROGRESS,
-                "do something", BigDecimal.ONE, null, 1L);
-        List<TaskDto> taskDtos = List.of(taskDto1, taskDto2);
-
-        ProjectDto projectDto1 = new ProjectDto(1L,1L, "proj",
-                null, "", ProjectStatus.OPEN, taskDtos);
-        ProjectDto projectDto2 = new ProjectDto(2L,1L, "",
-                null, "", ProjectStatus.OPEN, taskDtos);
-        List<ProjectDto> projectDtos = List.of(projectDto1, projectDto2);
+        UserDto actualUserDto1 = userService.getUser(1L);
+        UserDto actualUserDto2 = userService.getUserByEmail("@");
 
         UserDto expectedUserDto = new UserDto(1L, "@", "",
-                "", taskDtos, projectDtos);
+                "", setTaskDtos(), setProjectDtos());
 
-        assertThat(actualUserDto).isEqualTo(expectedUserDto);
+        assertThat(actualUserDto1).isEqualTo(expectedUserDto);
+        assertThat(actualUserDto2).isEqualTo(expectedUserDto);
     }
+
+    @Test(expected = ValidationException.class)
+    public void nullProjectCreateTest() throws ValidationException {
+        userService.createUser(null);
+    }
+
+    @Test(expected = ValidationException.class)
+    public void wrongUserParametersCreateTest() throws ValidationException {
+
+        userService.createUser(new UserDto(null, "@", "",
+                "", setTaskDtos(), setProjectDtos()));
+        userService.createUser(new UserDto(1L, null, "",
+                "", setTaskDtos(), setProjectDtos()));
+        userService.createUser(new UserDto(1L, "@", null,
+                "", setTaskDtos(), setProjectDtos()));
+        userService.createUser(new UserDto(1L, "@", "",
+                null, setTaskDtos(), setProjectDtos()));
+    }
+
+    @Test
+    public void createUserTest() throws ValidationException {
+
+        UserDto userDto = new UserDto(1L, "@", "",
+                "", setTaskDtos(), setProjectDtos());
+
+        User actualUser = userService.createUser(userDto);
+        actualUser.setId(1L);
+
+
+        User expectedUser = new User(1L, "@", "", "", setTasks(), setProjects());
+
+        assertThat(actualUser).isEqualTo(expectedUser);
+    }
+
+
 }
 
 

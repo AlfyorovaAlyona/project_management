@@ -55,10 +55,10 @@ public class ProjectService {
     }
 
     public Project create(ProjectDto projectDto) throws ValidationException {
+        validateIsNotNull(projectDto, "projectDto is NULL!!!");
         /**
          * Creating Dto with null id is unacceptable
          */
-        validateIsNotNull(projectDto, "projectDto is NULL!!!");
         validateIsNotNull(projectDto.getId(), "projectDto ID is NULL!!!");
 
         validateIsNotNull(projectDto.getCreatorId(), "No creator of that project!");
@@ -84,10 +84,10 @@ public class ProjectService {
         return project;
     }
 
-    private List<Task> buildTaskListFromTaskDtoList(List<TaskDto> tasksDto) {
-        return tasksDto.stream().map(task -> new Task(task.getId(), task.getName(),
-                task.getStatus(), task.getDescription(), task.getSalary(), task.getDeadline(),
-                task.getProjectId())).collect(Collectors.toList());
+    private List<Task> buildTaskListFromTaskDtoList(List<TaskDto> taskDtos) {
+        return taskDtos.stream().map(taskDto -> new Task(taskDto.getId(), taskDto.getName(),
+                taskDto.getStatus(), taskDto.getDescription(), taskDto.getSalary(), taskDto.getDeadline(),
+                taskDto.getProjectId())).collect(Collectors.toList());
     }
 
 }

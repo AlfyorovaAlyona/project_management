@@ -10,6 +10,7 @@ import com.projectmanagement.entities.Task;
 import com.projectmanagement.entities.User;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -66,8 +67,46 @@ public class UserService {
 
     private List<ProjectDto> buildProjectDtoListFromProjectList(List<Project> projects) {
         return projects.stream().map(project -> new ProjectDto(project.getId(), project.getCreatorId(),
-                project.getName(), project.getDeadline(), project.getDescription(), project.getStatus(),
-                buildTaskDtoListFromTaskList(project.getTasks())))
+                project.getName(), project.getDeadline(), project.getDescription(),
+                project.getStatus(), buildTaskDtoListFromTaskList(project.getTasks())))
                 .collect(Collectors.toList());
+    }
+
+    public User createUser(UserDto userDto) throws ValidationException {
+        validateIsNotNull(userDto, "userDto == NULL!!!");
+        /**
+         * Creating Dto with null id, email, and surname is unacceptable
+         */
+        validateIsNotNull(userDto.getId(), "UserId == NULL!!!");
+        validateIsNotNull(userDto.getEmail(), "UserEmail == NULL!!!");
+        validateIsNotNull(userDto.getName(), "UserName == NULL!!!");
+        validateIsNotNull(userDto.getSurname(), "UserSurname == NULL!!!");
+
+        if (userDto.getTasks() == null) {
+            userDto.setTasks(new ArrayList<>());
+        }
+
+        User user = buildUserFromUserDto(userDto);
+        userDao.save(user);
+        return user;
+    }
+
+    private User buildUserFromUserDto(UserDto userDto) {
+        return new User(userDto.getId(), userDto.getEmail(), userDto.getName(), userDto.getSurname(),
+                buildTaskListFromTaskDtoList(userDto.getTasks()),
+                buildProjectListFromProjectDtoList(userDto.getProjects()));
+    }
+
+    private List<Project> buildProjectListFromProjectDtoList(List<ProjectDto> projectDtos) {
+        return projectDtos.stream().map(projectDto -> new Project(projectDto.getId(),
+                projectDto.getCreatorId(), projectDto.getName(), projectDto.getDeadline(),
+                projectDto.getDescription(), projectDto.getStatus(),
+                buildTaskListFromTaskDtoList(projectDto.getTasks()))).collect(Collectors.toList());
+    }
+
+    private List<Task> buildTaskListFromTaskDtoList(List<TaskDto> taskDtos) {
+        return taskDtos.stream().map(taskDto -> new Task(taskDto.getId(), taskDto.getName(),
+                taskDto.getStatus(), taskDto.getDescription(), taskDto.getSalary(),
+                taskDto.getDeadline(), taskDto.getProjectId())).collect(Collectors.toList());
     }
 }
