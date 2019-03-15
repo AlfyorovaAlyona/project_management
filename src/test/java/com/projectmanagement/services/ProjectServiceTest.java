@@ -30,6 +30,25 @@ public class ProjectServiceTest {
 
     private ProjectService projectService;
 
+    private List<Task> setTasks() {
+        Task task1 = new Task(1L,"good task", TaskStatus.NOT_STARTED,
+                "do nothing", BigDecimal.ONE, null, 1L);
+
+        Task task2 = new Task(2L,"bad task", TaskStatus.IN_PROGRESS,
+                "do something", BigDecimal.ONE, null, 1L);
+        return List.of(task1, task2);
+    }
+
+    private List<TaskDto> setTaskDtos() {
+        TaskDto taskDto1 = new TaskDto(1L,"good task", TaskStatus.NOT_STARTED,
+                "do nothing", BigDecimal.ONE, null, 1L);
+
+        TaskDto taskDto2 = new TaskDto(2L,"bad task", TaskStatus.IN_PROGRESS,
+                "do something", BigDecimal.ONE, null, 1L);
+
+        return List.of(taskDto1, taskDto2);
+    }
+
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
@@ -44,28 +63,15 @@ public class ProjectServiceTest {
 
     @Test
     public void getTest() throws ValidationException {
-        Task task1 = new Task(1L,"good task", TaskStatus.NOT_STARTED,
-                "do nothing", BigDecimal.ONE, null, 1L);
-
-        Task task2 = new Task(2L,"bad task", TaskStatus.IN_PROGRESS,
-                "do something", BigDecimal.ONE, null, 1L);
-        List<Task> tasks = List.of(task1, task2);
         Project project = new Project(1L,1L, "proj",
-                null, "", ProjectStatus.OPEN, tasks);
+                null, "", ProjectStatus.OPEN, setTasks());
         given(projectDao.findOne(1L)).willReturn(project);
 
         //------//
 
         ProjectDto actualProjectDto = projectService.get(1L);
-        TaskDto taskDto1 = new TaskDto(1L,"good task", TaskStatus.NOT_STARTED,
-                "do nothing", BigDecimal.ONE, null, 1L);
-
-        TaskDto taskDto2 = new TaskDto(2L,"bad task", TaskStatus.IN_PROGRESS,
-                "do something", BigDecimal.ONE, null, 1L);
-
-        List<TaskDto> taskDtos = List.of(taskDto1, taskDto2);
         ProjectDto expectedProjectDto = new ProjectDto(1L,1L,
-                "proj", null, "", ProjectStatus.OPEN, taskDtos);
+                "proj", null, "", ProjectStatus.OPEN, setTaskDtos());
 
         assertThat(actualProjectDto).isEqualTo(expectedProjectDto);
     }
@@ -89,26 +95,15 @@ public class ProjectServiceTest {
 
     @Test
     public void createTest() throws ValidationException {
-        TaskDto taskDto1 = new TaskDto(1L,"", TaskStatus.NOT_STARTED,
-                "", BigDecimal.ONE, null, 1L);
-        TaskDto taskDto2 = new TaskDto(2L,"", TaskStatus.NOT_STARTED,
-                "", BigDecimal.ONE, null, 1L);
-        List<TaskDto> taskDtos = List.of(taskDto1, taskDto2);
         ProjectDto projectDto = new ProjectDto(1L, 3L, "",
-                null, "", ProjectStatus.OPEN, taskDtos);
+                null, "", ProjectStatus.OPEN, setTaskDtos());
         Project actualProject = projectService.create(projectDto);
 
-        //todo change it
+        //todo change it and understand why
         actualProject.setId(1L);
 
-        Task task1 = new Task(1L,"", TaskStatus.NOT_STARTED,
-                "", BigDecimal.ONE, null, 1L);
-        Task task2 = new Task(2L,"", TaskStatus.NOT_STARTED,
-                "", BigDecimal.ONE, null, 1L);
-        List<Task> tasks = List.of(task1, task2);
-
         Project expectedProject = new Project(1L, 3L, "",
-                null, "", ProjectStatus.OPEN, tasks);
+                null, "", ProjectStatus.OPEN, setTasks());
 
         assertThat(actualProject).isEqualTo(expectedProject);
     }

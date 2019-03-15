@@ -117,7 +117,6 @@ public class UserServiceTest {
 
     @Test(expected = ValidationException.class)
     public void wrongUserParametersCreateTest() throws ValidationException {
-
         userService.createUser(new UserDto(null, "@", "",
                 "", setTaskDtos(), setProjectDtos()));
         userService.createUser(new UserDto(1L, null, "",
@@ -130,15 +129,12 @@ public class UserServiceTest {
 
     @Test
     public void createUserTest() throws ValidationException {
-
         UserDto userDto = new UserDto(1L, "@", "",
                 "", setTaskDtos(), setProjectDtos());
-
         User actualUser = userService.createUser(userDto);
-        actualUser.setId(1L);
 
-
-        User expectedUser = new User(1L, "@", "", "", setTasks(), setProjects());
+        User expectedUser = new User(1L, "@", "",
+                "", setTasks(), setProjects());
 
         assertThat(actualUser).isEqualTo(expectedUser);
     }
