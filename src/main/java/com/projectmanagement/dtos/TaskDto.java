@@ -45,8 +45,7 @@ public class TaskDto {
     @Setter
     private String name;
 
-
-    //private List<UserDto> users; //предложить
+    //private List<UserDto> users;
 
     public TaskDto(Long id, String name,  TaskStatus taskStatus, String description,
                    BigDecimal salary, Calendar deadline, Long projectId) {

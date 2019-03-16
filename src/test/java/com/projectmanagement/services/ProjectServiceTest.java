@@ -58,7 +58,7 @@ public class ProjectServiceTest {
     @Test(expected = ValidationException.class)
     public void wrongIdGetTest() throws ValidationException {
         given(projectDao.findOne(1L)).willReturn(null);
-        projectService.get(1L);
+        projectService.getProject(1L);
     }
 
     @Test
@@ -69,7 +69,7 @@ public class ProjectServiceTest {
 
         //------//
 
-        ProjectDto actualProjectDto = projectService.get(1L);
+        ProjectDto actualProjectDto = projectService.getProject(1L);
         ProjectDto expectedProjectDto = new ProjectDto(1L,1L,
                 "proj", null, "", ProjectStatus.OPEN, setTaskDtos());
 

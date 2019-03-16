@@ -68,7 +68,6 @@ public class Project {
         this.description = description;
         this.statusCode = projectStatus.getValue();
         this.tasks = tasks;
-
     }
 
     @ManyToOne(fetch = FetchType.LAZY)

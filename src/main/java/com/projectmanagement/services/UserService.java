@@ -26,7 +26,7 @@ public class UserService {
 
     public UserDto getUser(Long userId) throws ValidationException {
         /**
-         * Creating project with null id is unacceptable
+         * Creating user with null id is unacceptable
          */
         validateIsNotNull(userId, "userId == NULL!!!");
 
@@ -35,7 +35,7 @@ public class UserService {
         /**If the user with id = userId exists
          * then we build a userDto from this User
          */
-        validateIsNotNull(user, "No project with id = " + userId);
+        validateIsNotNull(user, "No user with id = " + userId);
 
         return buildUserDtoFromUser(user);
     }

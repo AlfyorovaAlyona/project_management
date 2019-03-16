@@ -6,7 +6,6 @@ import com.projectmanagement.dtos.ProjectDto;
 import com.projectmanagement.dtos.TaskDto;
 import com.projectmanagement.entities.Project;
 import com.projectmanagement.entities.Task;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,7 +15,6 @@ import java.util.stream.Collectors;
 import static com.projectmanagement.common.utils.ValidationUtils.validateIsNotNull;
 
 @Service
-@RequiredArgsConstructor
 public class ProjectService {
 
     private ProjectDao projectDao;
@@ -25,7 +23,7 @@ public class ProjectService {
         this.projectDao = projectDao;
     }
 
-    public ProjectDto get(Long projectId) throws ValidationException {
+    public ProjectDto getProject(Long projectId) throws ValidationException {
         /**
          * Creating project with null id is unacceptable
          */

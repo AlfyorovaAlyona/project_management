@@ -110,34 +110,6 @@ public class UserServiceTest {
         assertThat(actualUserDto2).isEqualTo(expectedUserDto);
     }
 
-    @Test(expected = ValidationException.class)
-    public void nullProjectCreateTest() throws ValidationException {
-        userService.createUser(null);
-    }
-
-    @Test(expected = ValidationException.class)
-    public void wrongUserParametersCreateTest() throws ValidationException {
-        userService.createUser(new UserDto(null, "@", "",
-                "", setTaskDtos(), setProjectDtos()));
-        userService.createUser(new UserDto(1L, null, "",
-                "", setTaskDtos(), setProjectDtos()));
-        userService.createUser(new UserDto(1L, "@", null,
-                "", setTaskDtos(), setProjectDtos()));
-        userService.createUser(new UserDto(1L, "@", "",
-                null, setTaskDtos(), setProjectDtos()));
-    }
-
-    @Test
-    public void createUserTest() throws ValidationException {
-        UserDto userDto = new UserDto(1L, "@", "",
-                "", setTaskDtos(), setProjectDtos());
-        User actualUser = userService.createUser(userDto);
-
-        User expectedUser = new User(1L, "@", "",
-                "", setTasks(), setProjects());
-
-        assertThat(actualUser).isEqualTo(expectedUser);
-    }
 
 
 }

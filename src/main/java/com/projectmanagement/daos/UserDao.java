@@ -6,7 +6,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public  interface UserDao extends CrudRepository<User,Long >{
+public  interface UserDao extends CrudRepository<User,Long> {
 
     @Query("SELECT user from User user " +
             "where user.email = :email")

@@ -3,15 +3,13 @@ package com.projectmanagement.entities;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.List;
 
 @Entity
 @EqualsAndHashCode
+@NoArgsConstructor
 @Table (name = "users")
 @ToString(exclude = {"tasks", "projects"})
 public class User {
@@ -65,6 +63,15 @@ public class User {
     @Getter
     @Setter
     private List<Project> projects;
+
+    public User(Long id, String email, String name, String surname, String passwordHash, String passwordSalt) {
+        this.id = id;
+        this.email = email;
+        this.name = name;
+        this.surname = surname;
+        this.passwordHash = passwordHash;
+        this.passwordSalt = passwordSalt;
+    }
 
     public User(Long id, String email, String name, String surname,
                 List<Task> tasks, List<Project> projects) {
