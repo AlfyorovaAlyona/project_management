@@ -7,13 +7,11 @@ import java.util.Calendar;
 import java.util.List;
 
 import com.projectmanagement.entities.enums.TaskStatus;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @Entity
 @EqualsAndHashCode
+@NoArgsConstructor
 @Table (name = "tasks")
 @ToString (exclude = {"project", "users"})
 public class Task {
@@ -32,6 +30,7 @@ public class Task {
     private String description;
 
     @Column(name = "name")
+    @NotNull
     @Getter
     @Setter
     private String name;

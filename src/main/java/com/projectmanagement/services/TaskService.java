@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import static com.projectmanagement.common.utils.ValidationUtils.validateIsNotNull;
 
 @Service
-@RequiredArgsConstructor
 public class TaskService {
     private TaskDao taskDao;
 
@@ -18,12 +17,15 @@ public class TaskService {
         this.taskDao = taskDao;
     }
 
-    public TaskDto get(Long taskId) throws ValidationException {
-
+    public TaskDto getTask(Long taskId) throws ValidationException {
+        // Creating task with null id is unacceptable
         validateIsNotNull(taskId, "taskId == NULL!!!");
 
         Task task = taskDao.findOne(taskId);
 
+        /*If the task with id = taskId exists
+         * then we build a taskDto from this Task
+         */
         validateIsNotNull(task, "No task with id = " + taskId);
 
         return buildTaskDtoFromTask(task);
@@ -34,10 +36,22 @@ public class TaskService {
                 task.getSalary(), task.getDeadline(), task.getProjectId());
     }
 
-    private Task buildProjectFromProjectDto(TaskDto taskDto) {
+    public Task create(TaskDto taskDto) throws ValidationException {
+        validateIsNotNull(taskDto, "taskDto is NULL!!!");
+
+        //Creating Task with null Id, projectId and name is unacceptable
+        validateIsNotNull(taskDto.getId(), "taskDto ID is NULL!!!");
+        validateIsNotNull(taskDto.getProjectId(), "projectId of that task is NULL!!!");
+        validateIsNotNull(taskDto.getName(), "Name of that task is NULL!!!");
+
+        Task task = buildTaskFromTaskDto(taskDto);
+        taskDao.save(task);
+        return task;
+    }
+
+    private Task buildTaskFromTaskDto(TaskDto taskDto) {
         return new Task(taskDto.getId(), taskDto.getName(), taskDto.getStatus(), taskDto.getDescription(),
                 taskDto.getSalary(), taskDto.getDeadline(), taskDto.getProjectId());
-
     }
 
 }

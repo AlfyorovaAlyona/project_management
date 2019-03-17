@@ -24,14 +24,13 @@ public class ProjectService {
     }
 
     public ProjectDto getProject(Long projectId) throws ValidationException {
-        /**
-         * Creating project with null id is unacceptable
-         */
+
+        // Creating project with null id is unacceptable
         validateIsNotNull(projectId, "projectId == NULL!!!");
 
         Project project = projectDao.findOne(projectId);
 
-        /**If the project with id = projectId exists
+        /*If the project with id = projectId exists
          * then we build a projectDto from this Project
          */
         validateIsNotNull(project, "No project with id = " + projectId);
@@ -54,12 +53,11 @@ public class ProjectService {
 
     public Project create(ProjectDto projectDto) throws ValidationException {
         validateIsNotNull(projectDto, "projectDto is NULL!!!");
-        /**
-         * Creating Dto with null id is unacceptable
-         */
-        validateIsNotNull(projectDto.getId(), "projectDto ID is NULL!!!");
 
-        validateIsNotNull(projectDto.getCreatorId(), "No creator of that project!");
+        // Creating Project with null id, creatorId and name  is unacceptable
+        validateIsNotNull(projectDto.getId(), "projectDto ID is NULL!!!");
+        validateIsNotNull(projectDto.getCreatorId(), "CreatorId of that project is NULL!!!");
+        validateIsNotNull(projectDto.getName(), "Name of that project is NULL!!!");
 
         if (projectDto.getTasks() == null) {
             projectDto.setTasks(new ArrayList<>());

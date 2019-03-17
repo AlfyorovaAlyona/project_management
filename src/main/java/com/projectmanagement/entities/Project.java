@@ -29,6 +29,7 @@ public class Project {
     private Long creatorId;
 
     @Column(name = "name")
+    @NotNull
     @Getter
     @Setter
     private String name;

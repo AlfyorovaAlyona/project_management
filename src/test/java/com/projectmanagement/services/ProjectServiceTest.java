@@ -62,7 +62,7 @@ public class ProjectServiceTest {
     }
 
     @Test
-    public void getTest() throws ValidationException {
+    public void getProjectTest() throws ValidationException {
         Project project = new Project(1L,1L, "proj",
                 null, "", ProjectStatus.OPEN, setTasks());
         given(projectDao.findOne(1L)).willReturn(project);
@@ -88,7 +88,7 @@ public class ProjectServiceTest {
     }
 
     @Test(expected = ValidationException.class)
-    public void nullProjectIdCreateTest() throws ValidationException {
+    public void nullIdCreateTest() throws ValidationException {
         projectService.create(new ProjectDto(null, 1L, "",
                 null, "", ProjectStatus.OPEN, null));
     }

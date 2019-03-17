@@ -25,14 +25,13 @@ public class UserService {
     }
 
     public UserDto getUser(Long userId) throws ValidationException {
-        /**
-         * Creating user with null id is unacceptable
-         */
+
+        //Creating user with null id is unacceptable
         validateIsNotNull(userId, "userId == NULL!!!");
 
         User user = userDao.findOne(userId);
 
-        /**If the user with id = userId exists
+        /*If the user with id = userId exists
          * then we build a userDto from this User
          */
         validateIsNotNull(user, "No user with id = " + userId);
@@ -41,9 +40,9 @@ public class UserService {
     }
 
     public UserDto getUserByEmail(String userEmail) throws ValidationException {
-        /**
-         * Creating user with null email is unacceptable
-         */
+
+         // Creating user with null email is unacceptable
+
         validateIsNotNull(userEmail, "userEmail == NULL!!!");
 
         User user = userDao.findByEmail(userEmail);
