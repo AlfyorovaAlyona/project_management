@@ -8,10 +8,10 @@ import lombok.*;
 import java.util.List;
 
 @Entity
-@EqualsAndHashCode
 @NoArgsConstructor
 @Table (name = "users")
 @ToString(exclude = {"tasks", "projects"})
+@EqualsAndHashCode
 public class User {
 
     @Id
@@ -53,8 +53,8 @@ public class User {
     @ManyToMany(fetch = FetchType.LAZY,
             cascade = {CascadeType.PERSIST, CascadeType.MERGE}) //?
     @JoinTable(name = "tasks_users",
-            joinColumns = {@JoinColumn(name = "task_id")},
-            inverseJoinColumns = {@JoinColumn(name = "user_id")})
+            joinColumns = {@JoinColumn(name = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "task_id")})
     @Getter
     @Setter
     private List<Task> tasks;
@@ -64,13 +64,11 @@ public class User {
     @Setter
     private List<Project> projects;
 
-    public User(Long id, String email, String name, String surname, String passwordHash, String passwordSalt) {
+    public User(Long id, String email, String name, String surname) {
         this.id = id;
         this.email = email;
         this.name = name;
         this.surname = surname;
-        this.passwordHash = passwordHash;
-        this.passwordSalt = passwordSalt;
     }
 
     public User(Long id, String email, String name, String surname,

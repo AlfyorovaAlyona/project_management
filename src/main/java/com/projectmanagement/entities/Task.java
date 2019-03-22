@@ -73,6 +73,18 @@ public class Task {
         this.statusCode = taskStatus.getValue();
     }
 
+    public Task(Long id, String name,  TaskStatus taskStatus, String description,
+                BigDecimal salary, Calendar deadline, Long projectId, List<User> users) {
+        this.id = id;
+        this.description = description;
+        this.deadline = deadline;
+        this.projectId = projectId;
+        this.name = name;
+        this.salary = salary;
+        this.statusCode = taskStatus.getValue();
+        this.users = users;
+    }
+
     @ManyToOne(fetch = FetchType.LAZY)
     // JoinColumn indicates that this entity is the owner of the relationship
     // (that is: the corresponding table has a column with a foreign key to the
@@ -86,8 +98,8 @@ public class Task {
     @ManyToMany(fetch = FetchType.LAZY,
             cascade = {CascadeType.PERSIST, CascadeType.MERGE}) //?
     @JoinTable(name = "tasks_users",
-            joinColumns = {@JoinColumn(name = "user_id")},
-            inverseJoinColumns = {@JoinColumn(name = "task_id")})
+            joinColumns = {@JoinColumn(name = "task_id")},
+            inverseJoinColumns = {@JoinColumn(name = "user_id")})
     @Getter
     @Setter
     private List<User> users;

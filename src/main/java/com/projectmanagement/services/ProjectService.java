@@ -4,11 +4,14 @@ import com.projectmanagement.common.utils.*;
 import com.projectmanagement.daos.ProjectDao;
 import com.projectmanagement.dtos.ProjectDto;
 import com.projectmanagement.dtos.TaskDto;
+import com.projectmanagement.dtos.UserDto;
 import com.projectmanagement.entities.Project;
 import com.projectmanagement.entities.Task;
+import com.projectmanagement.entities.User;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -51,6 +54,11 @@ public class ProjectService {
                 .collect(Collectors.toList());
     }
 
+    private List<UserDto> buildUserDtoListFromUserList(List<User> users) {
+        return users.stream().map(user -> new UserDto(user.getId(), user.getEmail(), user.getName(),
+                user.getSurname())).collect(Collectors.toList());
+    }
+
     public Project create(ProjectDto projectDto) throws ValidationException {
         validateIsNotNull(projectDto, "projectDto is NULL!!!");
 
@@ -83,7 +91,28 @@ public class ProjectService {
     private List<Task> buildTaskListFromTaskDtoList(List<TaskDto> taskDtos) {
         return taskDtos.stream().map(taskDto -> new Task(taskDto.getId(), taskDto.getName(),
                 taskDto.getStatus(), taskDto.getDescription(), taskDto.getSalary(), taskDto.getDeadline(),
-                taskDto.getProjectId())).collect(Collectors.toList());
+                taskDto.getProjectId()))
+                .collect(Collectors.toList());
     }
 
+    private List<User> buildUserListFromUserDtoList(List<UserDto> userDtos) {
+        return userDtos.stream().map(userDto -> new User(userDto.getId(), userDto.getEmail(),
+                userDto.getName(), userDto.getSurname())).collect(Collectors.toList());
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

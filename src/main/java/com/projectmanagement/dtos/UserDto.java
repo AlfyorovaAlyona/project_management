@@ -44,4 +44,11 @@ public class UserDto {
         this.projects = projects;
         this.tasks = tasks;
     }
+
+    public UserDto(Long id, String email, String name, String surname) {
+        this.id = id;
+        this.name = name;
+        this.surname = surname;
+        this.email = email;
+    }
 }

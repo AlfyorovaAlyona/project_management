@@ -8,6 +8,8 @@ import com.projectmanagement.dtos.UserDto;
 import com.projectmanagement.entities.Project;
 import com.projectmanagement.entities.Task;
 import com.projectmanagement.entities.User;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -18,6 +20,7 @@ import static com.projectmanagement.common.utils.ValidationUtils.validateIsNotNu
 
 @Service
 public class UserService {
+
     private UserDao userDao;
 
     public UserService(UserDao userDao) {
@@ -64,6 +67,11 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
+    private List<UserDto> buildUserDtoListFromUserList(List<User> users) {
+        return users.stream().map(user -> new UserDto(user.getId(), user.getEmail(), user.getName(),
+                user.getSurname())).collect(Collectors.toList());
+    }
+
     private List<ProjectDto> buildProjectDtoListFromProjectList(List<Project> projects) {
         return projects.stream().map(project -> new ProjectDto(project.getId(), project.getCreatorId(),
                 project.getName(), project.getDeadline(), project.getDescription(),
@@ -71,10 +79,50 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    //todo написать addTask()
+    public User addTaskToUser(TaskDto taskDto, UserDto userDto) throws ValidationException {
+        validateIsNotNull(userDto, "userId is NULL!!!");
+        validateIsNotNull(userDto.getId(), "userId is NULL!!!");
+        validateIsNotNull(taskDto, "Impossible to add null task");
+        validateIsNotNull(taskDto.getId(), "Impossible to add null id task");
+
+        validateIsNotNull(userDao,"");
+        User user = userDao.findOne(userDto.getId());
+        validateIsNotNull(user, "No user with id");
+
+        if (user.getTasks() == null) {
+            user.setTasks(new ArrayList<>());
+        }
+
+        if (user.getProjects() == null) {
+            user.setProjects(new ArrayList<>());
+        }
+
+        List<Task> tasks = user.getTasks();
+        user.setTasks(buildTaskListFromTaskList(tasks, taskDto));
+
+        Task newTask = buildTaskFromTaskDto(taskDto);
+        if (newTask.getUsers() == null) {
+            newTask.setUsers(new ArrayList<>());
+        }
+        newTask.getUsers().add(user);
+        userDao.save(user);
+        return user;
+    }
+
+    private List<Task> buildTaskListFromTaskList(List<Task> taskDtos, TaskDto taskDto) {
+        List<Task> list = new ArrayList<>(taskDtos);
+        list.add(buildTaskFromTaskDto(taskDto));
+        return list;
+    }
+
+    private Task buildTaskFromTaskDto(TaskDto taskDto) {
+        return new Task(taskDto.getId(), taskDto.getName(), taskDto.getStatus(), taskDto.getDescription(),
+                taskDto.getSalary(), taskDto.getDeadline(), taskDto.getProjectId());
+    }
+
 
     //todo пока не нужно
-    /*public User createUser(UserDto userDto) throws ValidationException {
+    public User createUser(UserDto userDto) throws ValidationException {
         validateIsNotNull(userDto, "userDto == NULL!!!");
 
         validateIsNotNull(userDto.getId(), "UserId == NULL!!!");
@@ -84,6 +132,10 @@ public class UserService {
 
         if (userDto.getTasks() == null) {
             userDto.setTasks(new ArrayList<>());
+        }
+
+        if (userDto.getProjects() == null) {
+            userDto.setProjects(new ArrayList<>());
         }
 
         User user = buildUserFromUserDto(userDto);
@@ -107,7 +159,13 @@ public class UserService {
     private List<Task> buildTaskListFromTaskDtoList(List<TaskDto> taskDtos) {
         return taskDtos.stream().map(taskDto -> new Task(taskDto.getId(), taskDto.getName(),
                 taskDto.getStatus(), taskDto.getDescription(), taskDto.getSalary(),
-                taskDto.getDeadline(), taskDto.getProjectId())).collect(Collectors.toList());
+                taskDto.getDeadline(), taskDto.getProjectId()))
+                .collect(Collectors.toList());
     }
-*/
+
+    private List<User> buildUserListFromUserDtoList(List<UserDto> userDtos) {
+        return userDtos.stream().map(userDto -> new User(userDto.getId(), userDto.getEmail(),
+                userDto.getName(), userDto.getSurname())).collect(Collectors.toList());
+    }
+
 }

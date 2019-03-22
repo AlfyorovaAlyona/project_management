@@ -2,11 +2,9 @@ package com.projectmanagement.dtos;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.projectmanagement.entities.User;
 import com.projectmanagement.entities.enums.TaskStatus;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.Calendar;
@@ -14,6 +12,7 @@ import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @EqualsAndHashCode
+@NoArgsConstructor
 @ToString
 public class TaskDto {
 
@@ -45,7 +44,9 @@ public class TaskDto {
     @Setter
     private String name;
 
-    //private List<UserDto> users;
+    @Getter
+    @Setter
+    private List<UserDto> users;
 
     public TaskDto(Long id, String name,  TaskStatus taskStatus, String description,
                    BigDecimal salary, Calendar deadline, Long projectId) {
@@ -58,14 +59,16 @@ public class TaskDto {
         this.statusCode = taskStatus.getValue();
     }
 
-    public TaskDto(Long id, String name,  TaskStatus taskStatus, String description,
-                   BigDecimal salary, Calendar deadline) {
+    public TaskDto(Long id, String name, TaskStatus taskStatus, String description,
+                   BigDecimal salary, Calendar deadline, Long projectId, List<UserDto> users) {
         this.id = id;
         this.statusCode = taskStatus.getValue();
         this.deadline = deadline;
         this.name = name;
         this.salary = salary;
         this.description = description;
+        this.projectId = projectId;
+        this.users = users;
     }
 
     @JsonIgnore
