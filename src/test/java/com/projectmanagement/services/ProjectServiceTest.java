@@ -17,6 +17,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.math.BigDecimal;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;

@@ -19,6 +19,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.math.BigDecimal;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -110,7 +112,34 @@ public class UserServiceTest {
         assertThat(actualUserDto2).isEqualTo(expectedUserDto);
     }
 
+    @Test(expected = ValidationException.class)
+    public void addNullTaskTest() throws ValidationException {
+        UserDto userDto = new UserDto(1L, "@", "", "", setTaskDtos(), setProjectDtos());
+        userService.addTaskToUser(null, userDto);
+    }
 
+    @Test
+    public void addTaskTest() throws ValidationException {
+        User user = new User(1L, "@", "", "", setTasks(), setProjects());
+        UserDto userDto = new UserDto(1L, "@", "", "", setTaskDtos(), setProjectDtos());
+        given(userDao.findOne(1L)).willReturn(user);
+        TaskDto newTaskDto = new TaskDto(5L,"new", TaskStatus.IN_PROGRESS,
+                "fix", BigDecimal.ONE,
+                new GregorianCalendar(2019,Calendar.JANUARY,1), 1L);
+        User actualUser = userService.addTaskToUser(newTaskDto, userDto);
+
+        Task task1 = new Task(1L,"good task", TaskStatus.NOT_STARTED,
+                "do nothing", BigDecimal.ONE, null, 1L);
+
+        Task task2 = new Task(2L,"bad task", TaskStatus.IN_PROGRESS,
+                "do something", BigDecimal.ONE, null, 1L);
+        Task newTask = new Task(5L,"new", TaskStatus.IN_PROGRESS, "fix",
+                BigDecimal.ONE,new GregorianCalendar(2019,Calendar.JANUARY,1), 1L);
+        User expectedUser = new User(1L, "@", "", "",
+                List.of(task1, task2, newTask), setProjects());
+
+        assertThat(actualUser).isEqualTo(expectedUser);
+    }
 
 }
 

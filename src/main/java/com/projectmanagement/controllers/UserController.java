@@ -42,6 +42,5 @@ public class UserController {
         TaskDto taskDto = new TaskDto(2L,"not do", TaskStatus.NOT_STARTED, null,
                 BigDecimal.ONE, null, 1L);
         userService.addTaskToUser(taskDto, getUser(userId));
-
     }
 }
