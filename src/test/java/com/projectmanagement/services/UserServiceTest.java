@@ -121,8 +121,9 @@ public class UserServiceTest {
     @Test
     public void addTaskTest() throws ValidationException {
         User user = new User(1L, "@", "", "", setTasks(), setProjects());
-        UserDto userDto = new UserDto(1L, "@", "", "", setTaskDtos(), setProjectDtos());
         given(userDao.findOne(1L)).willReturn(user);
+
+        UserDto userDto = new UserDto(1L, "@", "", "", setTaskDtos(), setProjectDtos());
         TaskDto newTaskDto = new TaskDto(5L,"new", TaskStatus.IN_PROGRESS,
                 "fix", BigDecimal.ONE,
                 new GregorianCalendar(2019,Calendar.JANUARY,1), 1L);
@@ -130,13 +131,43 @@ public class UserServiceTest {
 
         Task task1 = new Task(1L,"good task", TaskStatus.NOT_STARTED,
                 "do nothing", BigDecimal.ONE, null, 1L);
-
         Task task2 = new Task(2L,"bad task", TaskStatus.IN_PROGRESS,
                 "do something", BigDecimal.ONE, null, 1L);
         Task newTask = new Task(5L,"new", TaskStatus.IN_PROGRESS, "fix",
                 BigDecimal.ONE,new GregorianCalendar(2019,Calendar.JANUARY,1), 1L);
         User expectedUser = new User(1L, "@", "", "",
                 List.of(task1, task2, newTask), setProjects());
+
+        assertThat(actualUser).isEqualTo(expectedUser);
+    }
+
+    @Test(expected = ValidationException.class)
+    public void removeNullTaskTest() throws ValidationException {
+        UserDto userDto = new UserDto(1L, "@", "", "", setTaskDtos(), setProjectDtos());
+        userService.removeTaskFromUser(null, userDto);
+    }
+
+    @Test(expected = ValidationException.class)
+    public void removeNotFoundTaskTest() throws ValidationException {
+        UserDto userDto = new UserDto(1L, "@", "", "", setTaskDtos(), setProjectDtos());
+        TaskDto task = new TaskDto(2L,"no task", TaskStatus.NOT_STARTED,
+                "", BigDecimal.ONE, null, 1L);
+        userService.removeTaskFromUser(task, userDto);
+    }
+
+    @Test
+    public void removeTaskFromUserTest() throws ValidationException {
+        User user = new User(1L, "@", "", "", setTasks(), setProjects());
+        given(userDao.findOne(1L)).willReturn(user);
+
+        UserDto userDto = new UserDto(1L, "@", "", "", setTaskDtos(), setProjectDtos());
+        TaskDto removedTaskDto = new TaskDto(1L,"good task", TaskStatus.NOT_STARTED,
+                "do nothing", BigDecimal.ONE, null, 1L);
+        User actualUser = userService.removeTaskFromUser(removedTaskDto, userDto);
+
+        Task task2 = new Task(2L,"bad task", TaskStatus.IN_PROGRESS,
+                "do something", BigDecimal.ONE, null, 1L);
+        User expectedUser = new User(1L, "@", "", "", List.of(task2), setProjects());
 
         assertThat(actualUser).isEqualTo(expectedUser);
     }

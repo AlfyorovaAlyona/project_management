@@ -32,15 +32,17 @@ public class UserController {
         return userService.getUserByEmail(userEmail);
     }
 
-    @PostMapping(value = "create")
-    public void createUser(UserDto userDto) throws ValidationException {
-        userService.createUser(userDto);
-    }
-
     @PutMapping(value = "addTask")
     public void addTask(Long userId) throws ValidationException {
-        TaskDto taskDto = new TaskDto(2L,"not do", TaskStatus.NOT_STARTED, null,
+        TaskDto taskDto = new TaskDto(3L,"do nth", TaskStatus.NOT_STARTED, null,
                 BigDecimal.ONE, null, 1L);
         userService.addTaskToUser(taskDto, getUser(userId));
+    }
+
+    @PutMapping(value = "removeTask")
+    public void removeTask(Long userId) throws ValidationException {
+        TaskDto taskDto = new TaskDto(3L,"do nth", TaskStatus.NOT_STARTED, null,
+                BigDecimal.ONE, null, 1L);
+        userService.removeTaskFromUser(taskDto, getUser(userId));
     }
 }
