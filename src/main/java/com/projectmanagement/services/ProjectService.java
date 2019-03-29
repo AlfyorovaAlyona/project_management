@@ -59,13 +59,17 @@ public class ProjectService {
                 user.getSurname())).collect(Collectors.toList());
     }
 
-    public Project create(ProjectDto projectDto) throws ValidationException {
+    private void projectDtoIsValid(ProjectDto projectDto) throws ValidationException {
         validateIsNotNull(projectDto, "projectDto is NULL!!!");
 
         // Creating Project with null id, creatorId and name  is unacceptable
         validateIsNotNull(projectDto.getId(), "projectDto ID is NULL!!!");
         validateIsNotNull(projectDto.getCreatorId(), "CreatorId of that project is NULL!!!");
         validateIsNotNull(projectDto.getName(), "Name of that project is NULL!!!");
+    }
+
+    public Project create(ProjectDto projectDto) throws ValidationException {
+        projectDtoIsValid(projectDto);
 
         if (projectDto.getTasks() == null) {
             projectDto.setTasks(new ArrayList<>());

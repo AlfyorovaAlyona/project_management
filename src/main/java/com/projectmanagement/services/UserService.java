@@ -37,7 +37,7 @@ public class UserService {
         /*If the user with id = userId exists
          * then we build a userDto from this User
          */
-        validateIsNotNull(user, "No user with id = " + userId);
+        validateIsNotNull(user, "No user with id: " + userId);
 
         return buildUserDtoFromUser(user);
     }
@@ -45,12 +45,11 @@ public class UserService {
     public UserDto getUserByEmail(String userEmail) throws ValidationException {
 
         // Creating user with null email is unacceptable
-
         validateIsNotNull(userEmail, "userEmail == NULL!!!");
 
         User user = userDao.findByEmail(userEmail);
 
-        validateIsNotNull(user, "No user with userEmail" + userEmail);
+        validateIsNotNull(user, "No user with userEmail: " + userEmail);
 
         return buildUserDtoFromUser(user);
     }
@@ -79,22 +78,13 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
+    //--------------------------------------------------------------------------------------------------
+
     private void taskAndUserAreValid(TaskDto taskDto, UserDto userDto) throws ValidationException {
         validateIsNotNull(userDto, "userId is NULL!!!");
         validateIsNotNull(userDto.getId(), "userId is NULL!!!");
         validateIsNotNull(taskDto, "Impossible to add null task");
         validateIsNotNull(taskDto.getId(), "Impossible to add null task with null id");
-    }
-
-    private void ifTaskOrProjectListIsNull(User user) {
-        if (user.getTasks() == null) {
-            user.setTasks(new ArrayList<>());
-        }
-
-        if (user.getProjects() == null) {
-            user.setProjects(new ArrayList<>());
-        }
-        userDao.save(user);
     }
 
     public User addTaskToUser(TaskDto taskDto, UserDto userDto) throws ValidationException {
@@ -103,7 +93,13 @@ public class UserService {
         User user = userDao.findOne(userDto.getId());
         validateIsNotNull(user, "No user with id");
 
-        ifTaskOrProjectListIsNull(user);
+        if (user.getTasks() == null) {
+            user.setTasks(new ArrayList<>());
+        }
+
+        if (user.getProjects() == null) {
+            user.setProjects(new ArrayList<>());
+        }
 
         List<Task> tasks = user.getTasks();
         user.setTasks(buildTaskListWithAddedTask(tasks, taskDto));
@@ -127,13 +123,15 @@ public class UserService {
                 taskDto.getSalary(), taskDto.getDeadline(), taskDto.getProjectId());
     }
 
+    //--------------------------------------------------------------------------------------------------
+
     public User removeTaskFromUser(TaskDto taskDto, UserDto userDto) throws ValidationException {
         taskAndUserAreValid(taskDto, userDto);
 
         User user = userDao.findOne(userDto.getId());
         validateIsNotNull(user, "No user with id");
 
-        //todo do better
+        //todo better
         if (userDto.getTasks() == null) {
             userDto.setTasks(new ArrayList<>());
         }

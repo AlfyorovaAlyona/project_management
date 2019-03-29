@@ -48,13 +48,19 @@ public class TaskService {
                 user.getSurname())).collect(Collectors.toList());
     }
 
-    public Task create(TaskDto taskDto) throws ValidationException {
+    private void taskDtoIsValid(TaskDto taskDto) throws ValidationException {
         validateIsNotNull(taskDto, "taskDto is NULL!!!");
 
         //Creating Task with null Id, projectId and name is unacceptable
         validateIsNotNull(taskDto.getId(), "taskDto ID is NULL!!!");
         validateIsNotNull(taskDto.getProjectId(), "projectId of that task is NULL!!!");
         validateIsNotNull(taskDto.getName(), "Name of that task is NULL!!!");
+    }
+
+    //--------------------------------------------------------------------------------------------------
+
+    public Task create(TaskDto taskDto) throws ValidationException {
+        taskDtoIsValid(taskDto);
 
         if (taskDto.getUsers() == null) {
             taskDto.setUsers(new ArrayList<>());

@@ -22,7 +22,6 @@ public enum TaskStatus {
         return value;
     }
 
-
     /**
      * Translates a short int status code to an object representing
      * an status.
