@@ -43,19 +43,27 @@ public class TaskService {
     }
 
     private TaskDto buildTaskDtoFromTask(Task task){
-        return new TaskDto(task.getId(), task.getName() , task.getStatus(), task.getDescription(),
-                task.getSalary(), task.getDeadline(), task.getProjectId(),
-                buildUserDtoListFromUserList(task.getUsers()));
+        TaskDto taskDto = new TaskDto();
+        taskDto.setId(task.getId());
+        taskDto.setName(task.getName());
+        taskDto.setStatus(task.getStatus());
+        taskDto.setDescription(task.getDescription());
+        taskDto.setDeadline(task.getDeadline());
+        taskDto.setSalary(task.getSalary());
+        taskDto.setProjectId(task.getProjectId());
+        taskDto.setUsers(buildUserDtoListFromUserList(task.getUsers()));
+        return taskDto;
     }
 
     private List<UserDto> buildUserDtoListFromUserList(List<User> users) {
-        return users.stream().map(user -> new UserDto(user.getId(), user.getEmail(), user.getName(),
-                user.getSurname())).collect(Collectors.toList());
+        return users.stream()
+                .map(user -> new UserDto(user.getId(),   user.getEmail(),
+                                         user.getName(), user.getSurname()))
+                .collect(Collectors.toList());
     }
 
     private void taskDtoIsValid(TaskDto taskDto) throws ValidationException {
         validateIsNotNull(taskDto, "taskDto is NULL!!!");
-
         //Creating Task with null Id, projectId and name is unacceptable
         validateIsNotNull(taskDto.getId(), "taskDto ID is NULL!!!");
         validateIsNotNull(taskDto.getProjectId(), "projectId of that task is NULL!!!");
@@ -80,15 +88,22 @@ public class TaskService {
     }
 
     private Task buildTaskFromTaskDto(TaskDto taskDto) {
-        return new Task(taskDto.getId(), taskDto.getName(), taskDto.getStatus(), taskDto.getDescription(),
-                taskDto.getSalary(), taskDto.getDeadline(), taskDto.getProjectId(),
-                buildUserListFromUserDtoList(taskDto.getUsers()));
+        Task task = new Task();
+        task.setStatus(taskDto.getStatus());
+        task.setDescription(taskDto.getDescription());
+        task.setId(taskDto.getId());
+        task.setName(taskDto.getName());
+        task.setDeadline(taskDto.getDeadline());
+        task.setSalary(taskDto.getSalary());
+        task.setProjectId(taskDto.getProjectId());
+        task.setUsers(buildUserListFromUserDtoList(taskDto.getUsers()));
+        return task;
     }
 
     private List<User> buildUserListFromUserDtoList(List<UserDto> userDtos) {
         return userDtos.stream()
-                .map(userDto -> new User(userDto.getId(), userDto.getEmail(),
-                        userDto.getName(), userDto.getSurname()))
+                .map(userDto -> new User(userDto.getId(),   userDto.getEmail(),
+                                         userDto.getName(), userDto.getSurname()))
                 .collect(Collectors.toList());
     }
 

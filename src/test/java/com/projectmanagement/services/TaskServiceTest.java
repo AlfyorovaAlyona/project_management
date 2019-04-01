@@ -36,14 +36,16 @@ public class TaskServiceTest {
 
     @Test
     public void getTaskTest() throws ValidationException {
-        Task task = new Task(1L,"good task", TaskStatus.NOT_STARTED,
-                "do nothing", BigDecimal.ONE, null, 1L, new ArrayList<>());
+        Task task = new Task(1L,                "good task", TaskStatus.NOT_STARTED,
+                            "do nothing", BigDecimal.ONE, null,
+                            1L, new ArrayList<>());
         given(taskDao.findOne(1L)).willReturn(task);
 
 
         TaskDto actualTaskDto = taskService.getTask(1L);
-        TaskDto expectedTaskDto = new TaskDto(1L,"good task", TaskStatus.NOT_STARTED,
-                "do nothing", BigDecimal.ONE, null, 1L, new ArrayList<>());
+        TaskDto expectedTaskDto = new TaskDto(1L,               "good task", TaskStatus.NOT_STARTED,
+                                            "do nothing", BigDecimal.ONE,   null,
+                                            1L, new ArrayList<>());
 
         assertThat(actualTaskDto).isEqualTo(expectedTaskDto);
     }
@@ -55,30 +57,35 @@ public class TaskServiceTest {
 
     @Test(expected = ValidationException.class)
     public void nullProjectIdCreateTest() throws ValidationException {
-        taskService.create(new TaskDto(1L,"good task", TaskStatus.NOT_STARTED,
-                "do nothing", BigDecimal.ONE, null, null));
+        taskService.create(new TaskDto(1L,              "good task", TaskStatus.NOT_STARTED,
+                                    "do nothing", BigDecimal.ONE,   null,
+                                    null));
     }
 
     @Test(expected = ValidationException.class)
     public void nullTaskIdCreateTest() throws ValidationException {
-        taskService.create(new TaskDto(null,"good task", TaskStatus.NOT_STARTED,
-                "do nothing", BigDecimal.ONE, null, 1L));
+        taskService.create(new TaskDto(null,            "good task", TaskStatus.NOT_STARTED,
+                                    "do nothing", BigDecimal.ONE,   null,
+                                    1L));
     }
 
     @Test(expected = ValidationException.class)
     public void nullNameCreateTest() throws ValidationException {
-        taskService.create(new TaskDto(1L,null, TaskStatus.NOT_STARTED,
-                "do nothing", BigDecimal.ONE, null, 1L));
+        taskService.create(new TaskDto(1L,              null,       TaskStatus.NOT_STARTED,
+                                    "do nothing", BigDecimal.ONE, null,
+                                    1L));
     }
 
     @Test
     public void createTest() throws ValidationException {
-        TaskDto taskDto = new TaskDto(1L,"good task", TaskStatus.NOT_STARTED,
-                "do nothing", BigDecimal.ONE, null, 1L, new ArrayList<>());
+        TaskDto taskDto = new TaskDto(1L,               "good task", TaskStatus.NOT_STARTED,
+                                    "do nothing", BigDecimal.ONE,   null,
+                                    1L, new ArrayList<>());
         Task actualTask = taskService.create(taskDto);
 
-        Task expectedTask = new Task(1L,"good task", TaskStatus.NOT_STARTED,
-                "do nothing", BigDecimal.ONE, null, 1L, new ArrayList<>());
+        Task expectedTask = new Task(1L,                "good task", TaskStatus.NOT_STARTED,
+                                    "do nothing", BigDecimal.ONE,   null,
+                                    1L, new ArrayList<>());
 
         assertThat(actualTask).isEqualTo(expectedTask);
     }

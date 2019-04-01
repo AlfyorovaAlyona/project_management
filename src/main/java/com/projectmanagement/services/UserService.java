@@ -63,22 +63,18 @@ public class UserService {
 
     private List<TaskDto> buildTaskDtoListFromTaskList(List<Task> tasks) {
         return tasks.stream()
-                .map(task -> new TaskDto(task.getId(), task.getName(), task.getStatus(),
-                        task.getDescription(), task.getSalary(), task.getDeadline(), task.getProjectId()))
-                .collect(Collectors.toList());
-    }
-
-    private List<UserDto> buildUserDtoListFromUserList(List<User> users) {
-        return users.stream()
-                .map(user -> new UserDto(user.getId(), user.getEmail(), user.getName(), user.getSurname()))
+                .map(task -> new TaskDto(task.getId(),          task.getName(),   task.getStatus(),
+                                         task.getDescription(), task.getSalary(), task.getDeadline(),
+                                         task.getProjectId()))
                 .collect(Collectors.toList());
     }
 
     private List<ProjectDto> buildProjectDtoListFromProjectList(List<Project> projects) {
         return projects.stream()
-                .map(project -> new ProjectDto(project.getId(), project.getCreatorId(), project.getName(),
-                        project.getDeadline(), project.getDescription(), project.getStatus(),
-                        buildTaskDtoListFromTaskList(project.getTasks())))
+                .map(project -> new ProjectDto(project.getId(),          project.getCreatorId(),
+                                               project.getName(),        project.getDeadline(),
+                                               project.getDescription(), project.getStatus(),
+                                               buildTaskDtoListFromTaskList(project.getTasks())))
                 .collect(Collectors.toList());
     }
 
@@ -105,6 +101,12 @@ public class UserService {
         return users;
     }
 
+    private void taskDtoIsValid(TaskDto taskDto) throws ValidationException {
+        validateIsNotNull(taskDto, "Impossible to add null task");
+        validateIsNotNull(taskDto.getId(), "Impossible to add null task with null id");
+        validateIsNotNull(taskDto.getUserIds(), "No users specified for the task");
+    }
+
     private void setEmptyTasksOrProjectAreNull(User user) {
         if (user.getTasks() == null) {
             user.setTasks(new ArrayList<>());
@@ -126,17 +128,12 @@ public class UserService {
         return users;
     }
 
-    private void taskDtoIsValid(TaskDto taskDto) throws ValidationException {
-        validateIsNotNull(taskDto, "Impossible to add null task");
-        validateIsNotNull(taskDto.getId(), "Impossible to add null task with null id");
-        validateIsNotNull(taskDto.getUserIds(), "No users specified for the task");
-    }
-
     private List<Task> buildTaskListWithAddedTask(List<Task> tasks, Task task) {
         List<Task> list = new ArrayList<>(tasks);
         list.add(task);
         return list;
     }
+
 
     private Task buildTaskFromTaskDto(TaskDto taskDto) {
         Task task = new Task();
@@ -195,7 +192,8 @@ public class UserService {
     }
 
     private User buildUserFromUserDto(UserDto userDto) {
-        return new User(userDto.getId(), userDto.getEmail(), userDto.getName(), userDto.getSurname());
+        return new User(userDto.getId(),   userDto.getEmail(),
+                        userDto.getName(), userDto.getSurname());
     }
 
     private List<UserDto> buildUserDtoListWithRemovedUser(List<UserDto> userDtos, UserDto userDto) {

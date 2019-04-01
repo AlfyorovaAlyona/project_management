@@ -10,6 +10,7 @@ import com.projectmanagement.entities.Task;
 import com.projectmanagement.entities.User;
 import org.springframework.stereotype.Service;
 
+import java.net.PortUnreachableException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -27,7 +28,6 @@ public class ProjectService {
     }
 
     public ProjectDto getProject(Long projectId) throws ValidationException {
-
         // Creating project with null id is unacceptable
         validateIsNotNull(projectId, "projectId == NULL!!!");
 
@@ -42,31 +42,26 @@ public class ProjectService {
     }
 
     private ProjectDto buildProjectDtoFromProject(Project project) {
-        return new ProjectDto(project.getId(), project.getCreatorId(), project.getName(),
-                project.getDeadline(), project.getDescription(), project.getStatus(),
-                buildTaskDtoListFromTaskList(project.getTasks()));
-
+        ProjectDto projectDto = new ProjectDto();
+        projectDto.setId(project.getId());
+        projectDto.setName(project.getName());
+        projectDto.setCreatorId(project.getCreatorId());
+        projectDto.setDeadline(project.getDeadline());
+        project.setDescription(project.getDescription());
+        projectDto.setStatus(project.getStatus());
+        projectDto.setTasks(buildTaskDtoListFromTaskList(project.getTasks()));
+        return projectDto;
     }
 
     private List<TaskDto> buildTaskDtoListFromTaskList(List<Task> tasks) {
-        return tasks.stream().map(task -> new TaskDto(task.getId(), task.getName(), task.getStatus(),
-                task.getDescription(), task.getSalary(), task.getDeadline(), task.getProjectId()))
+        return tasks.stream()
+                .map(task -> new TaskDto(task.getId(),     task.getName(),
+                                         task.getStatus(), task.getDescription(),
+                                         task.getSalary(), task.getDeadline(),
+                                         task.getProjectId()))
                 .collect(Collectors.toList());
     }
 
-    private List<UserDto> buildUserDtoListFromUserList(List<User> users) {
-        return users.stream().map(user -> new UserDto(user.getId(), user.getEmail(), user.getName(),
-                user.getSurname())).collect(Collectors.toList());
-    }
-
-    private void projectDtoIsValid(ProjectDto projectDto) throws ValidationException {
-        validateIsNotNull(projectDto, "projectDto is NULL!!!");
-
-        // Creating Project with null id, creatorId and name  is unacceptable
-        validateIsNotNull(projectDto.getId(), "projectDto ID is NULL!!!");
-        validateIsNotNull(projectDto.getCreatorId(), "CreatorId of that project is NULL!!!");
-        validateIsNotNull(projectDto.getName(), "Name of that project is NULL!!!");
-    }
 
     public Project create(ProjectDto projectDto) throws ValidationException {
         projectDtoIsValid(projectDto);
@@ -81,6 +76,14 @@ public class ProjectService {
         return project;
     }
 
+    private void projectDtoIsValid(ProjectDto projectDto) throws ValidationException {
+        validateIsNotNull(projectDto, "projectDto is NULL!!!");
+        // Creating Project with null id, creatorId and name  is unacceptable
+        validateIsNotNull(projectDto.getId(), "projectDto ID is NULL!!!");
+        validateIsNotNull(projectDto.getCreatorId(), "CreatorId of that project is NULL!!!");
+        validateIsNotNull(projectDto.getName(), "Name of that project is NULL!!!");
+    }
+
     private Project buildProjectFromProjectDto(ProjectDto projectDto) {
         Project project = new Project();
         project.setName(projectDto.getName());
@@ -93,16 +96,11 @@ public class ProjectService {
     }
 
     private List<Task> buildTaskListFromTaskDtoList(List<TaskDto> taskDtos) {
-        return taskDtos.stream().map(taskDto -> new Task(taskDto.getId(), taskDto.getName(),
-                taskDto.getStatus(), taskDto.getDescription(), taskDto.getSalary(), taskDto.getDeadline(),
-                taskDto.getProjectId()))
-                .collect(Collectors.toList());
-    }
-
-    private List<User> buildUserListFromUserDtoList(List<UserDto> userDtos) {
-        return userDtos.stream()
-                .map(userDto -> new User(userDto.getId(), userDto.getEmail(),
-                userDto.getName(), userDto.getSurname()))
+        return taskDtos.stream()
+                .map(taskDto -> new Task(taskDto.getId(),     taskDto.getName(),
+                                         taskDto.getStatus(), taskDto.getDescription(),
+                                         taskDto.getSalary(), taskDto.getDeadline(),
+                                         taskDto.getProjectId()))
                 .collect(Collectors.toList());
     }
 }
