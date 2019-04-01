@@ -28,12 +28,10 @@ public class UserService {
     }
 
     public UserDto getUser(Long userId) throws ValidationException {
-
         //Creating user with null id is unacceptable
         validateIsNotNull(userId, "userId == NULL!!!");
 
         User user = userDao.findOne(userId);
-
         /*If the user with id = userId exists
          * then we build a userDto from this User
          */
@@ -43,56 +41,71 @@ public class UserService {
     }
 
     public UserDto getUserByEmail(String userEmail) throws ValidationException {
-
         // Creating user with null email is unacceptable
         validateIsNotNull(userEmail, "userEmail == NULL!!!");
 
         User user = userDao.findByEmail(userEmail);
-
         validateIsNotNull(user, "No user with userEmail: " + userEmail);
 
         return buildUserDtoFromUser(user);
     }
 
     private UserDto buildUserDtoFromUser(User user) {
-        return new UserDto(user.getId(), user.getEmail(), user.getName(), user.getSurname(),
-                buildTaskDtoListFromTaskList(user.getTasks()),
-                buildProjectDtoListFromProjectList(user.getProjects()));
+        UserDto userDto = new UserDto();
+        userDto.setId(user.getId());
+        userDto.setEmail(user.getEmail());
+        userDto.setName(user.getName());
+        userDto.setSurname(user.getSurname());
+        userDto.setTasks(buildTaskDtoListFromTaskList(user.getTasks()));
+        userDto.setProjects(buildProjectDtoListFromProjectList(user.getProjects()));
+        return userDto;
     }
 
     private List<TaskDto> buildTaskDtoListFromTaskList(List<Task> tasks) {
-        return tasks.stream().map(task -> new TaskDto(task.getId(), task.getName(), task.getStatus(),
-                task.getDescription(), task.getSalary(), task.getDeadline(), task.getProjectId()))
+        return tasks.stream()
+                .map(task -> new TaskDto(task.getId(), task.getName(), task.getStatus(),
+                        task.getDescription(), task.getSalary(), task.getDeadline(), task.getProjectId()))
                 .collect(Collectors.toList());
     }
 
     private List<UserDto> buildUserDtoListFromUserList(List<User> users) {
-        return users.stream().map(user -> new UserDto(user.getId(), user.getEmail(), user.getName(),
-                user.getSurname())).collect(Collectors.toList());
-    }
-
-    private List<ProjectDto> buildProjectDtoListFromProjectList(List<Project> projects) {
-        return projects.stream().map(project -> new ProjectDto(project.getId(), project.getCreatorId(),
-                project.getName(), project.getDeadline(), project.getDescription(),
-                project.getStatus(), buildTaskDtoListFromTaskList(project.getTasks())))
+        return users.stream()
+                .map(user -> new UserDto(user.getId(), user.getEmail(), user.getName(), user.getSurname()))
                 .collect(Collectors.toList());
     }
 
-    //--------------------------------------------------------------------------------------------------
-
-    private void taskAndUserAreValid(TaskDto taskDto, UserDto userDto) throws ValidationException {
-        validateIsNotNull(userDto, "userId is NULL!!!");
-        validateIsNotNull(userDto.getId(), "userId is NULL!!!");
-        validateIsNotNull(taskDto, "Impossible to add null task");
-        validateIsNotNull(taskDto.getId(), "Impossible to add null task with null id");
+    private List<ProjectDto> buildProjectDtoListFromProjectList(List<Project> projects) {
+        return projects.stream()
+                .map(project -> new ProjectDto(project.getId(), project.getCreatorId(), project.getName(),
+                        project.getDeadline(), project.getDescription(), project.getStatus(),
+                        buildTaskDtoListFromTaskList(project.getTasks())))
+                .collect(Collectors.toList());
     }
 
-    public User addTaskToUser(TaskDto taskDto, UserDto userDto) throws ValidationException {
-        taskAndUserAreValid(taskDto, userDto);
 
-        User user = userDao.findOne(userDto.getId());
-        validateIsNotNull(user, "No user with id");
+    public List<User> addTaskToUser(TaskDto taskDto) throws ValidationException {
+        taskDtoIsValid(taskDto);
 
+        if (taskDto.getUsers() == null) {
+            taskDto.setUsers(new ArrayList<>());
+        }
+
+        List<User> users = buildUserListFromUserIdList(taskDto);
+        Task newTask = buildTaskFromTaskDto(taskDto);
+
+        for (User user : users) {
+
+            setEmptyTasksOrProjectAreNull(user);
+
+            List<Task> tasks = user.getTasks();
+            user.setTasks(buildTaskListWithAddedTask(tasks, newTask));
+            taskDto.getUsers().add(buildUserDtoFromUser(user));
+            userDao.save(user);
+        }
+        return users;
+    }
+
+    private void setEmptyTasksOrProjectAreNull(User user) {
         if (user.getTasks() == null) {
             user.setTasks(new ArrayList<>());
         }
@@ -100,111 +113,101 @@ public class UserService {
         if (user.getProjects() == null) {
             user.setProjects(new ArrayList<>());
         }
-
-        List<Task> tasks = user.getTasks();
-        user.setTasks(buildTaskListWithAddedTask(tasks, taskDto));
-
-        Task newTask = buildTaskFromTaskDto(taskDto);
-        if (newTask.getUsers() == null) {
-            newTask.setUsers(new ArrayList<>());
-        }
-        userDao.save(user);
-        return user;
     }
 
-    private List<Task> buildTaskListWithAddedTask(List<Task> tasks, TaskDto taskDto) {
+    private List<User> buildUserListFromUserIdList(TaskDto taskDto) throws ValidationException {
+        List<User> users = new ArrayList<>();
+        List<Long> userIds = taskDto.getUserIds();
+        for (Long userId : userIds) {
+            User user = userDao.findOne(userId);
+            validateIsNotNull(user, "No user with id: " + userId);
+            users.add(user);
+        }
+        return users;
+    }
+
+    private void taskDtoIsValid(TaskDto taskDto) throws ValidationException {
+        validateIsNotNull(taskDto, "Impossible to add null task");
+        validateIsNotNull(taskDto.getId(), "Impossible to add null task with null id");
+        validateIsNotNull(taskDto.getUserIds(), "No users specified for the task");
+    }
+
+    private List<Task> buildTaskListWithAddedTask(List<Task> tasks, Task task) {
         List<Task> list = new ArrayList<>(tasks);
-        list.add(buildTaskFromTaskDto(taskDto));
+        list.add(task);
         return list;
     }
 
     private Task buildTaskFromTaskDto(TaskDto taskDto) {
-        return new Task(taskDto.getId(), taskDto.getName(), taskDto.getStatus(), taskDto.getDescription(),
-                taskDto.getSalary(), taskDto.getDeadline(), taskDto.getProjectId());
+        Task task = new Task();
+        task.setId(taskDto.getId());
+        task.setName(taskDto.getName());
+        task.setStatus(taskDto.getStatus());
+        task.setDescription(taskDto.getDescription());
+        task.setSalary(taskDto.getSalary());
+        task.setDeadline(taskDto.getDeadline());
+        task.setProjectId(taskDto.getProjectId());
+        return task;
     }
 
-    //--------------------------------------------------------------------------------------------------
 
-    public User removeTaskFromUser(TaskDto taskDto, UserDto userDto) throws ValidationException {
-        taskAndUserAreValid(taskDto, userDto);
+    public List<User> removeTaskFromUser(TaskDto taskDto) throws ValidationException {
+        taskDtoIsValid(taskDto);
+        validateIsNotNull(taskDto.getUsers(), "No user doing this task!");
 
-        User user = userDao.findOne(userDto.getId());
-        validateIsNotNull(user, "No user with id");
+        List<UserDto> userDtos = buildUserDtoListFromUserIdList(taskDto);
+        List<User> users = new ArrayList<>();
 
-        //todo better
-        if (userDto.getTasks() == null) {
-            userDto.setTasks(new ArrayList<>());
+        for (UserDto userDto : userDtos) {
+                validateIsNotNull(userDto.getTasks(), "userDto has no task");
+                if (userDto.getProjects() == null) {
+                    userDto.setProjects(new ArrayList<>());
+                }
+
+                List<TaskDto> taskDtos = userDto.getTasks();
+                if (taskDtos.contains(taskDto))
+                    userDto.setTasks(buildTaskListWithRemovedTask(taskDtos, taskDto));
+                else {
+                    throw new ValidationException("userDto has no such taskDto");
+                }
+                List<UserDto> userDtoList = taskDto.getUsers();
+                if (userDtoList.contains(userDto)) {
+                   taskDto.setUsers(buildUserDtoListWithRemovedUser(userDtoList, userDto));
+                } else {
+                    throw new ValidationException("taskDto has no such userDto");
+                }
+                User user = buildUserFromUserDto(userDto);
+                users.add(user);
+                userDao.save(user);
         }
-
-        if (userDto.getProjects() == null) {
-            userDto.setProjects(new ArrayList<>());
-        }
-
-        List<TaskDto> taskDtos = userDto.getTasks();
-
-        if (taskDtos.contains(taskDto)) {
-            userDto.setTasks(buildTaskListWithRemovedTask(taskDtos, taskDto));
-            if (taskDto.getUsers() != null)
-                taskDto.getUsers().remove(userDto);
-            userDao.save(buildUserFromUserDto(userDto));
-        } else {
-            throw new ValidationException("removeTaskFromUser: User with id: " + user.getId()
-                    + " has not such task");
-        }
-        return user;
+        return users;
     }
 
-    private List<TaskDto> buildTaskListWithRemovedTask(List<TaskDto> taskDtos, TaskDto taskDto) {
-        List<TaskDto> list = new ArrayList<>(taskDtos);
-        list.remove(taskDto);
-        return list;
+    private List<UserDto> buildUserDtoListFromUserIdList(TaskDto taskDto) throws ValidationException {
+        List<UserDto> userDtos = new ArrayList<>();
+        for (Long userId : taskDto.getUserIds()) {
+            User user = userDao.findOne(userId);
+            UserDto userDto = buildUserDtoFromUser(user);
+            validateIsNotNull(user, "No user with id: " + userId);
+            userDtos.add(userDto);
+        }
+        return userDtos;
     }
 
     private User buildUserFromUserDto(UserDto userDto) {
-        return new User(userDto.getId(), userDto.getEmail(), userDto.getName(), userDto.getSurname(),
-                buildTaskListFromTaskDtoList(userDto.getTasks()),
-                buildProjectListFromProjectDtoList(userDto.getProjects()));
+        return new User(userDto.getId(), userDto.getEmail(), userDto.getName(), userDto.getSurname());
     }
 
-    private List<Project> buildProjectListFromProjectDtoList(List<ProjectDto> projectDtos) {
-        return projectDtos.stream().map(projectDto -> new Project(projectDto.getId(),
-                projectDto.getCreatorId(), projectDto.getName(), projectDto.getDeadline(),
-                projectDto.getDescription(), projectDto.getStatus(),
-                buildTaskListFromTaskDtoList(projectDto.getTasks()))).collect(Collectors.toList());
+    private List<UserDto> buildUserDtoListWithRemovedUser(List<UserDto> userDtos, UserDto userDto) {
+        List<UserDto> list = new ArrayList<>(userDtos);
+        list.remove(userDto);
+        return list;
     }
 
-    private List<Task> buildTaskListFromTaskDtoList(List<TaskDto> taskDtos) {
-        return taskDtos.stream().map(taskDto -> new Task(taskDto.getId(), taskDto.getName(),
-                taskDto.getStatus(), taskDto.getDescription(), taskDto.getSalary(),
-                taskDto.getDeadline(), taskDto.getProjectId()))
-                .collect(Collectors.toList());
+    private List<TaskDto> buildTaskListWithRemovedTask(List<TaskDto> tasks, TaskDto removedTask) {
+        List<TaskDto> list = new ArrayList<>(tasks);
+        list.remove(removedTask);
+        return list;
     }
 
-    //todo пока не нужно
-  /*  public User createUser(UserDto userDto) throws ValidationException {
-        validateIsNotNull(userDto, "userDto == NULL!!!");
-
-        validateIsNotNull(userDto.getId(), "UserId == NULL!!!");
-        validateIsNotNull(userDto.getEmail(), "UserEmail == NULL!!!");
-        validateIsNotNull(userDto.getName(), "UserName == NULL!!!");
-        validateIsNotNull(userDto.getSurname(), "UserSurname == NULL!!!");
-
-        if (userDto.getTasks() == null) {
-            userDto.setTasks(new ArrayList<>());
-        }
-
-        if (userDto.getProjects() == null) {
-            userDto.setProjects(new ArrayList<>());
-        }
-
-        User user = buildUserFromUserDto(userDto);
-        userDao.save(user);
-        return user;
-    }
-
-    private List<User> buildUserListFromUserDtoList(List<UserDto> userDtos) {
-        return userDtos.stream().map(userDto -> new User(userDto.getId(), userDto.getEmail(),
-                userDto.getName(), userDto.getSurname())).collect(Collectors.toList());
-    }
-*/
 }

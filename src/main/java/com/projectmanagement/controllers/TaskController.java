@@ -21,8 +21,8 @@ public class TaskController {
          return taskService.getTask(taskId);
      }
 
-     @PostMapping(value = "create")
-     public void createTask(TaskDto taskDto) throws ValidationException {
+     @PostMapping(value = "create", consumes = MediaType.APPLICATION_JSON_VALUE)
+     public void createTask(@RequestBody TaskDto taskDto) throws ValidationException {
          taskService.create(taskDto);
      }
 }

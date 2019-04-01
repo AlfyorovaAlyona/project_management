@@ -11,7 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @Table (name = "users")
 @ToString(exclude = {"tasks", "projects"})
-@EqualsAndHashCode
+@EqualsAndHashCode (exclude = {"projects", "tasks"})
 public class User {
 
     @Id
@@ -79,6 +79,15 @@ public class User {
         this.surname = surname;
         this.tasks = tasks;
         this.projects = projects;
+    }
+
+    public User(Long id, String email, String name, String surname,
+                List<Task> tasks) {
+        this.id = id;
+        this.email = email;
+        this.name = name;
+        this.surname = surname;
+        this.tasks = tasks;
     }
 
 }

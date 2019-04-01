@@ -12,74 +12,22 @@ import com.projectmanagement.entities.enums.ProjectStatus;
 import com.projectmanagement.entities.enums.TaskStatus;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.math.BigDecimal;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
 public class UserServiceTest {
     @Mock
     private UserDao userDao;
 
     private UserService userService;
-
-    private List<Task> setTasks() {
-        Task task1 = new Task(1L,"good task", TaskStatus.NOT_STARTED,
-                "do nothing", BigDecimal.ONE, null, 1L);
-
-        Task task2 = new Task(2L,"bad task", TaskStatus.IN_PROGRESS,
-                "do something", BigDecimal.ONE, null, 1L);
-        return List.of(task1, task2);
-    }
-
-    private List<Project> setProjects() {
-        Task task1 = new Task(1L,"", TaskStatus.NOT_STARTED,
-                "do", BigDecimal.ONE, null, 1L);
-        Task task2 = new Task(2L,"", TaskStatus.IN_PROGRESS,
-                "do", BigDecimal.ONE, null, 2L);
-        List<Task> tasks1 = List.of(task1);
-        List<Task> tasks2 = List.of(task2);
-
-        Project project1 = new Project(1L,1L, "proj",
-                null, "", ProjectStatus.OPEN, tasks1);
-        Project project2 = new Project(2L,1L, "",
-                null, "", ProjectStatus.OPEN, tasks2);
-        return List.of(project1, project2);
-    }
-
-    private List<TaskDto> setTaskDtos() {
-        TaskDto taskDto1 = new TaskDto(1L,"good task", TaskStatus.NOT_STARTED,
-                "do nothing", BigDecimal.ONE, null, 1L);
-        TaskDto taskDto2 = new TaskDto(2L,"bad task", TaskStatus.IN_PROGRESS,
-                "do something", BigDecimal.ONE, null, 1L);
-        return List.of(taskDto1, taskDto2);
-    }
-
-    private List<ProjectDto> setProjectDtos() {
-        TaskDto taskDto1 = new TaskDto(1L,"", TaskStatus.NOT_STARTED,
-                "do", BigDecimal.ONE, null, 1L);
-        TaskDto taskDto2 = new TaskDto(2L,"", TaskStatus.IN_PROGRESS,
-                "do", BigDecimal.ONE, null, 2L);
-        List<TaskDto> taskDtos1 = List.of(taskDto1);
-        List<TaskDto> taskDtos2 = List.of(taskDto2);
-
-        ProjectDto projectDto1 = new ProjectDto(1L,1L, "proj",
-                null, "", ProjectStatus.OPEN, taskDtos1);
-        ProjectDto projectDto2 = new ProjectDto(2L,1L, "",
-                null, "", ProjectStatus.OPEN, taskDtos2);
-        return List.of(projectDto1, projectDto2);
-    }
 
     @Before
     public void setUp() {
@@ -114,46 +62,66 @@ public class UserServiceTest {
 
     @Test(expected = ValidationException.class)
     public void addNullTaskTest() throws ValidationException {
-        UserDto userDto = new UserDto(1L, "@", "", "", setTaskDtos(), setProjectDtos());
-        userService.addTaskToUser(null, userDto);
+        userService.addTaskToUser(null);
     }
+
 
     @Test
     public void addTaskTest() throws ValidationException {
+        String date = "03.03.2019";
+
         User user = new User(1L, "@", "", "", setTasks(), setProjects());
         given(userDao.findOne(1L)).willReturn(user);
 
-        UserDto userDto = new UserDto(1L, "@", "", "", setTaskDtos(), setProjectDtos());
-        TaskDto newTaskDto = new TaskDto(5L,"new", TaskStatus.IN_PROGRESS,
-                "fix", BigDecimal.ONE,
-                new GregorianCalendar(2019,Calendar.JANUARY,1), 1L);
-        User actualUser = userService.addTaskToUser(newTaskDto, userDto);
+        TaskDto newTaskDto = new TaskDto(5L, List.of(1L),"new", TaskStatus.IN_PROGRESS,
+                "fix", BigDecimal.ONE, setDate(date), 1L);
+        List<User> actualUser = userService.addTaskToUser(newTaskDto);
 
         Task task1 = new Task(1L,"good task", TaskStatus.NOT_STARTED,
                 "do nothing", BigDecimal.ONE, null, 1L);
         Task task2 = new Task(2L,"bad task", TaskStatus.IN_PROGRESS,
                 "do something", BigDecimal.ONE, null, 1L);
         Task newTask = new Task(5L,"new", TaskStatus.IN_PROGRESS, "fix",
-                BigDecimal.ONE,new GregorianCalendar(2019,Calendar.JANUARY,1), 1L);
+                BigDecimal.ONE, setDate(date), 1L);
         User expectedUser = new User(1L, "@", "", "",
                 List.of(task1, task2, newTask), setProjects());
 
-        assertThat(actualUser).isEqualTo(expectedUser);
+        assertThat(actualUser).isEqualTo(List.of(expectedUser));
+    }
+
+    private Date setDate(String stringDate) {
+        SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
+        Date date = null;
+        try {
+            date = format.parse(stringDate);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return date;
     }
 
     @Test(expected = ValidationException.class)
     public void removeNullTaskTest() throws ValidationException {
-        UserDto userDto = new UserDto(1L, "@", "", "", setTaskDtos(), setProjectDtos());
-        userService.removeTaskFromUser(null, userDto);
+        userService.removeTaskFromUser(null);
     }
 
     @Test(expected = ValidationException.class)
-    public void removeNotFoundTaskTest() throws ValidationException {
-        UserDto userDto = new UserDto(1L, "@", "", "", setTaskDtos(), setProjectDtos());
-        TaskDto task = new TaskDto(2L,"no task", TaskStatus.NOT_STARTED,
+    public void removeTaskFromNullUsersTest() throws ValidationException {
+        TaskDto taskDto = new TaskDto(2L, null, "no task", TaskStatus.NOT_STARTED,
                 "", BigDecimal.ONE, null, 1L);
-        userService.removeTaskFromUser(task, userDto);
+        userService.removeTaskFromUser(taskDto);
     }
+
+    @Test(expected = ValidationException.class)
+    public void removeNotFoundTask() throws ValidationException {
+        User user = new User(1L, "@", "", "", setTasks(), setProjects());
+        given(userDao.findOne(1L)).willReturn(user);
+        UserDto userDto = new UserDto(1L, "@", "", "", setTaskDtos(), setProjectDtos());
+        TaskDto removedTaskDto = new TaskDto(1L, List.of(1L), "", TaskStatus.IN_PROGRESS,
+                "", null, null, 1L, List.of(userDto));
+        userService.removeTaskFromUser(removedTaskDto);
+    }
+
 
     @Test
     public void removeTaskFromUserTest() throws ValidationException {
@@ -161,15 +129,62 @@ public class UserServiceTest {
         given(userDao.findOne(1L)).willReturn(user);
 
         UserDto userDto = new UserDto(1L, "@", "", "", setTaskDtos(), setProjectDtos());
-        TaskDto removedTaskDto = new TaskDto(1L,"good task", TaskStatus.NOT_STARTED,
-                "do nothing", BigDecimal.ONE, null, 1L);
-        User actualUser = userService.removeTaskFromUser(removedTaskDto, userDto);
+        TaskDto removedTaskDto = new TaskDto(1L, List.of(1L), "good task", TaskStatus.NOT_STARTED,
+                "do nothing", BigDecimal.ONE, null, 1L, List.of(userDto));
+        List<User> actualUser = userService.removeTaskFromUser(removedTaskDto);
 
         Task task2 = new Task(2L,"bad task", TaskStatus.IN_PROGRESS,
                 "do something", BigDecimal.ONE, null, 1L);
         User expectedUser = new User(1L, "@", "", "", List.of(task2), setProjects());
 
-        assertThat(actualUser).isEqualTo(expectedUser);
+        assertThat(actualUser).isEqualTo(List.of(expectedUser));
+    }
+
+    private List<Task> setTasks() {
+        Task task1 = new Task(1L,"good task", TaskStatus.NOT_STARTED,
+                "do nothing", BigDecimal.ONE, null, 1L);
+
+        Task task2 = new Task(2L,"bad task", TaskStatus.IN_PROGRESS,
+                "do something", BigDecimal.ONE, null, 1L);
+        return List.of(task1, task2);
+    }
+
+    private List<Project> setProjects() {
+        Task task1 = new Task(1L,"", TaskStatus.NOT_STARTED,
+                "do", BigDecimal.ONE, null, 1L);
+        Task task2 = new Task(2L,"", TaskStatus.IN_PROGRESS,
+                "do", BigDecimal.ONE, null, 2L);
+        List<Task> tasks1 = List.of(task1);
+        List<Task> tasks2 = List.of(task2);
+
+        Project project1 = new Project(1L,1L, "proj",
+                null, "", ProjectStatus.OPEN, tasks1);
+        Project project2 = new Project(2L,1L, "",
+                null, "", ProjectStatus.OPEN, tasks2);
+        return List.of(project1, project2);
+    }
+
+    private List<TaskDto> setTaskDtos() {
+        TaskDto taskDto1 = new TaskDto(1L,"good task", TaskStatus.NOT_STARTED,
+                "do nothing", BigDecimal.ONE, null, 1L, null);
+        TaskDto taskDto2 = new TaskDto(2L,"bad task", TaskStatus.IN_PROGRESS,
+                "do something", BigDecimal.ONE, null, 1L, null);
+        return List.of(taskDto1, taskDto2);
+    }
+
+    private List<ProjectDto> setProjectDtos() {
+        TaskDto taskDto1 = new TaskDto(1L,"", TaskStatus.NOT_STARTED,
+                "do", BigDecimal.ONE, null, 1L, null);
+        TaskDto taskDto2 = new TaskDto(2L,"", TaskStatus.IN_PROGRESS,
+                "do", BigDecimal.ONE, null, 2L, null);
+        List<TaskDto> taskDtos1 = List.of(taskDto1);
+        List<TaskDto> taskDtos2 = List.of(taskDto2);
+
+        ProjectDto projectDto1 = new ProjectDto(1L,1L, "proj",
+                null, "", ProjectStatus.OPEN, taskDtos1);
+        ProjectDto projectDto2 = new ProjectDto(2L,1L, "",
+                null, "", ProjectStatus.OPEN, taskDtos2);
+        return List.of(projectDto1, projectDto2);
     }
 
 }

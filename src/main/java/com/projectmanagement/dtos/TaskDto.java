@@ -8,12 +8,13 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@EqualsAndHashCode
+@EqualsAndHashCode (exclude = {"users", "userIds"})
 @NoArgsConstructor
-@ToString
+@ToString (exclude = {"users", "userIds"})
 public class TaskDto {
 
     @Getter
@@ -30,7 +31,7 @@ public class TaskDto {
 
     @Getter
     @Setter
-    private Calendar deadline;
+    private Date deadline;
 
     @Getter
     @Setter
@@ -48,8 +49,13 @@ public class TaskDto {
     @Setter
     private List<UserDto> users;
 
+    //list long userId;
+    @Getter
+    @Setter
+    private List<Long> userIds;
+
     public TaskDto(Long id, String name,  TaskStatus taskStatus, String description,
-                   BigDecimal salary, Calendar deadline, Long projectId) {
+                   BigDecimal salary, Date deadline, Long projectId) {
         this.id = id;
         this.deadline = deadline;
         this.name = name;
@@ -60,7 +66,7 @@ public class TaskDto {
     }
 
     public TaskDto(Long id, String name, TaskStatus taskStatus, String description,
-                   BigDecimal salary, Calendar deadline, Long projectId, List<UserDto> users) {
+                   BigDecimal salary, Date deadline, Long projectId, List<UserDto> users) {
         this.id = id;
         this.statusCode = taskStatus.getValue();
         this.deadline = deadline;
@@ -68,6 +74,31 @@ public class TaskDto {
         this.salary = salary;
         this.description = description;
         this.projectId = projectId;
+        this.users = users;
+    }
+
+    public TaskDto(Long id, List<Long> userIds, String name, TaskStatus taskStatus, String description,
+                   BigDecimal salary, Date deadline, Long projectId) {
+        this.id = id;
+        this.statusCode = taskStatus.getValue();
+        this.deadline = deadline;
+        this.name = name;
+        this.salary = salary;
+        this.description = description;
+        this.projectId = projectId;
+        this.userIds = userIds;
+    }
+
+    public TaskDto(Long id, List<Long> userIds, String name, TaskStatus taskStatus, String description,
+                   BigDecimal salary, Date deadline, Long projectId, List<UserDto> users) {
+        this.id = id;
+        this.statusCode = taskStatus.getValue();
+        this.deadline = deadline;
+        this.name = name;
+        this.salary = salary;
+        this.description = description;
+        this.projectId = projectId;
+        this.userIds = userIds;
         this.users = users;
     }
 

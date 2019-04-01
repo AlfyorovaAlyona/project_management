@@ -100,8 +100,10 @@ public class ProjectService {
     }
 
     private List<User> buildUserListFromUserDtoList(List<UserDto> userDtos) {
-        return userDtos.stream().map(userDto -> new User(userDto.getId(), userDto.getEmail(),
-                userDto.getName(), userDto.getSurname())).collect(Collectors.toList());
+        return userDtos.stream()
+                .map(userDto -> new User(userDto.getId(), userDto.getEmail(),
+                userDto.getName(), userDto.getSurname()))
+                .collect(Collectors.toList());
     }
 }
 

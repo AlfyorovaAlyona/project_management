@@ -4,13 +4,14 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import com.projectmanagement.entities.enums.TaskStatus;
 import lombok.*;
 
 @Entity
-@EqualsAndHashCode
+@EqualsAndHashCode(exclude = {"users", "project"})
 @NoArgsConstructor
 @Table (name = "tasks")
 @ToString (exclude = {"project", "users"})
@@ -43,7 +44,7 @@ public class Task {
     @Column(name = "deadline")
     @Getter
     @Setter
-    private Calendar deadline; //может так задавать дату будет удобнее?
+    private Date deadline;
 
     @Column(name = "project_id")
     @NotNull
@@ -63,7 +64,7 @@ public class Task {
     }
 
     public Task(Long id, String name,  TaskStatus taskStatus, String description,
-                BigDecimal salary, Calendar deadline, Long projectId) {
+                BigDecimal salary, Date deadline, Long projectId) {
         this.id = id;
         this.description = description;
         this.deadline = deadline;
@@ -74,7 +75,7 @@ public class Task {
     }
 
     public Task(Long id, String name,  TaskStatus taskStatus, String description,
-                BigDecimal salary, Calendar deadline, Long projectId, List<User> users) {
+                BigDecimal salary, Date deadline, Long projectId, List<User> users) {
         this.id = id;
         this.description = description;
         this.deadline = deadline;

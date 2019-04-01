@@ -34,6 +34,11 @@ public class TaskService {
          */
         validateIsNotNull(task, "No task with id = " + taskId);
 
+        //create empty users list
+        if (task.getUsers() == null) {
+            task.setUsers(new ArrayList<>());
+        }
+
         return buildTaskDtoFromTask(task);
     }
 
@@ -57,7 +62,6 @@ public class TaskService {
         validateIsNotNull(taskDto.getName(), "Name of that task is NULL!!!");
     }
 
-    //--------------------------------------------------------------------------------------------------
 
     public Task create(TaskDto taskDto) throws ValidationException {
         taskDtoIsValid(taskDto);
@@ -82,8 +86,10 @@ public class TaskService {
     }
 
     private List<User> buildUserListFromUserDtoList(List<UserDto> userDtos) {
-        return userDtos.stream().map(userDto -> new User(userDto.getId(), userDto.getEmail(),
-                userDto.getName(), userDto.getSurname())).collect(Collectors.toList());
+        return userDtos.stream()
+                .map(userDto -> new User(userDto.getId(), userDto.getEmail(),
+                        userDto.getName(), userDto.getSurname()))
+                .collect(Collectors.toList());
     }
 
 }

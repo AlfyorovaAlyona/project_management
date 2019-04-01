@@ -2,17 +2,17 @@ package com.projectmanagement.entities;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import com.projectmanagement.entities.enums.ProjectStatus;
 import lombok.*;
 
 @Entity
-@EqualsAndHashCode
+@EqualsAndHashCode (exclude = {"tasks"}) //id?
 @NoArgsConstructor
 @Table (name = "projects")
-@ToString(exclude = {"creator", "tasks"})
+@ToString (exclude = {"creator", "tasks"})
 public class Project {
     @Id
     @Column(name = "id")
@@ -37,7 +37,7 @@ public class Project {
     @Column(name = "deadline")
     @Getter
     @Setter
-    private Calendar deadline;
+    private Date deadline;
 
     @Column(name = "description")
     @Getter
@@ -60,7 +60,7 @@ public class Project {
     @Setter
     private List<Task> tasks;
 
-    public Project(Long id, Long creatorId, String name, Calendar deadline, String description,
+    public Project(Long id, Long creatorId, String name, Date deadline, String description,
                    ProjectStatus projectStatus, List<Task> tasks) {
         this.id = id;
         this.creatorId = creatorId;

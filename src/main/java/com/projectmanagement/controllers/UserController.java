@@ -3,14 +3,9 @@ package com.projectmanagement.controllers;
 import com.projectmanagement.common.utils.ValidationException;
 import com.projectmanagement.dtos.TaskDto;
 import com.projectmanagement.dtos.UserDto;
-import com.projectmanagement.entities.enums.TaskStatus;
 import com.projectmanagement.services.UserService;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-
-import java.math.BigDecimal;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 
 @RestController
 @RequestMapping("user")
@@ -32,17 +27,13 @@ public class UserController {
         return userService.getUserByEmail(userEmail);
     }
 
-    @PutMapping(value = "addTask")
-    public void addTask(Long userId) throws ValidationException {
-        TaskDto taskDto = new TaskDto(3L,"do nth", TaskStatus.NOT_STARTED, null,
-                BigDecimal.ONE, null, 1L);
-        userService.addTaskToUser(taskDto, getUser(userId));
+    @PostMapping(value = "addTask", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public void addTask(@RequestBody TaskDto taskDto) throws ValidationException {
+        userService.addTaskToUser(taskDto);
     }
 
-    @PutMapping(value = "removeTask")
-    public void removeTask(Long userId) throws ValidationException {
-        TaskDto taskDto = new TaskDto(3L,"do nth", TaskStatus.NOT_STARTED, null,
-                BigDecimal.ONE, null, 1L);
-        userService.removeTaskFromUser(taskDto, getUser(userId));
+    @DeleteMapping(value = "removeTask", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public void removeTask(@RequestBody TaskDto taskDto) throws ValidationException {
+        userService.removeTaskFromUser(taskDto);
     }
 }

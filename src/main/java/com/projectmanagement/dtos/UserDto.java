@@ -7,7 +7,7 @@ import lombok.*;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @NoArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode (exclude = {"projects", "tasks"})
 @ToString
 public class UserDto {
 
@@ -51,4 +51,5 @@ public class UserDto {
         this.surname = surname;
         this.email = email;
     }
+
 }

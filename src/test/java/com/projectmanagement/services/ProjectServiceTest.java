@@ -24,8 +24,6 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
 public class ProjectServiceTest {
     @Mock
     private ProjectDao projectDao;
@@ -101,7 +99,7 @@ public class ProjectServiceTest {
                 null, "", ProjectStatus.OPEN, setTaskDtos());
         Project actualProject = projectService.create(projectDto);
 
-        //todo change it and understand why
+        //todo test
         actualProject.setId(1L);
 
         Project expectedProject = new Project(1L, 3L, "",

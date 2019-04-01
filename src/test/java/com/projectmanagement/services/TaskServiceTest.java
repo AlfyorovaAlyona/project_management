@@ -7,19 +7,15 @@ import com.projectmanagement.entities.Task;
 import com.projectmanagement.entities.enums.TaskStatus;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
 public class TaskServiceTest {
     @Mock
     private TaskDao taskDao;
@@ -41,14 +37,13 @@ public class TaskServiceTest {
     @Test
     public void getTaskTest() throws ValidationException {
         Task task = new Task(1L,"good task", TaskStatus.NOT_STARTED,
-                "do nothing", BigDecimal.ONE, null, 1L);
+                "do nothing", BigDecimal.ONE, null, 1L, new ArrayList<>());
         given(taskDao.findOne(1L)).willReturn(task);
 
-        //--------//
 
         TaskDto actualTaskDto = taskService.getTask(1L);
         TaskDto expectedTaskDto = new TaskDto(1L,"good task", TaskStatus.NOT_STARTED,
-                "do nothing", BigDecimal.ONE, null, 1L);
+                "do nothing", BigDecimal.ONE, null, 1L, new ArrayList<>());
 
         assertThat(actualTaskDto).isEqualTo(expectedTaskDto);
     }
@@ -79,11 +74,11 @@ public class TaskServiceTest {
     @Test
     public void createTest() throws ValidationException {
         TaskDto taskDto = new TaskDto(1L,"good task", TaskStatus.NOT_STARTED,
-                "do nothing", BigDecimal.ONE, null, 1L);
+                "do nothing", BigDecimal.ONE, null, 1L, new ArrayList<>());
         Task actualTask = taskService.create(taskDto);
 
         Task expectedTask = new Task(1L,"good task", TaskStatus.NOT_STARTED,
-                "do nothing", BigDecimal.ONE, null, 1L);
+                "do nothing", BigDecimal.ONE, null, 1L, new ArrayList<>());
 
         assertThat(actualTask).isEqualTo(expectedTask);
     }

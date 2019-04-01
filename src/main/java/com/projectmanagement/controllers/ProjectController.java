@@ -28,7 +28,7 @@ public class ProjectController {
     }
 
     @PostMapping(value = "create", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void createProject(ProjectDto projectDto) throws ValidationException {
+    public void createProject(@RequestBody ProjectDto projectDto) throws ValidationException {
         projectService.create(projectDto);
     }
 
