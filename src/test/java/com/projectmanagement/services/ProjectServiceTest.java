@@ -92,6 +92,7 @@ public class ProjectServiceTest {
         assertThat(actualProject).isEqualTo(expectedProject);
     }
 
+
     private List<Task> setTasks() {
         Task task1 = new Task(1L,               "good task",    TaskStatus.NOT_STARTED,
                             "do nothing", BigDecimal.ONE,       null,

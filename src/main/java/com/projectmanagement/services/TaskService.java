@@ -42,6 +42,15 @@ public class TaskService {
         return buildTaskDtoFromTask(task);
     }
 
+    public List<TaskDto> getAll() throws ValidationException {
+        List<Task> tasks = taskDao.findAllBy();
+        validateIsNotNull(tasks, "None of tasks was found");
+
+        return tasks.stream()
+                .map(this::buildTaskDtoFromTask)
+                .collect(Collectors.toList());
+    }
+
     private TaskDto buildTaskDtoFromTask(Task task){
         TaskDto taskDto = new TaskDto();
         taskDto.setId(task.getId());

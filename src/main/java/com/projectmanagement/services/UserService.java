@@ -134,7 +134,6 @@ public class UserService {
         return list;
     }
 
-
     private Task buildTaskFromTaskDto(TaskDto taskDto) {
         Task task = new Task();
         task.setId(taskDto.getId());

@@ -103,6 +103,21 @@ public class ProjectService {
                                          taskDto.getProjectId()))
                 .collect(Collectors.toList());
     }
+
+    public List<ProjectDto> getListByCreatorId(Long creatorId) throws ValidationException {
+        validateIsNotNull(creatorId, "Creator Id is NULL!!!");
+
+        List<Project> projects = projectDao.findAllByCreatorId(creatorId);
+        validateIsNotNull(projects, "No projects for user with id: " + creatorId);
+
+        //todo validate that current user is equal to the one mentioned in project
+        // when Security added + test it
+
+        return projects.stream()
+                .map(this::buildProjectDtoFromProject)
+                .collect(Collectors.toList());
+    }
+
 }
 
 

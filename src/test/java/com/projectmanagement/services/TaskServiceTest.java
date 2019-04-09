@@ -12,6 +12,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
@@ -48,6 +49,29 @@ public class TaskServiceTest {
                                             1L, new ArrayList<>());
 
         assertThat(actualTaskDto).isEqualTo(expectedTaskDto);
+    }
+
+    @Test(expected = ValidationException.class)
+    public void getNullAllTasksTest() throws ValidationException {
+        given(taskDao.findAllBy()).willReturn(null);
+        taskService.getAll();
+    }
+
+    @Test
+    public void getAllTasksTest() throws ValidationException {
+        Task task = new Task(1L,                "good task", TaskStatus.NOT_STARTED,
+                            "do nothing", BigDecimal.ONE, null,
+                            1L, new ArrayList<>());
+        TaskDto expectedTaskDto = new TaskDto(1L,               "good task", TaskStatus.NOT_STARTED,
+                                            "do nothing", BigDecimal.ONE,   null,
+                                            1L, new ArrayList<>());
+        List<Task> tasks = List.of(task);
+        given(taskDao.findAllBy()).willReturn(tasks);
+
+        List<TaskDto> actualTaskDtos = taskService.getAll();
+        List<TaskDto> expectedTaskDtos = List.of(expectedTaskDto);
+
+        assertThat(actualTaskDtos).isEqualTo(expectedTaskDtos);
     }
 
     @Test(expected = ValidationException.class)

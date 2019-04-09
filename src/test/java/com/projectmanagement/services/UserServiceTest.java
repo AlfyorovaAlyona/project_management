@@ -64,7 +64,6 @@ public class UserServiceTest {
         userService.addTaskToUser(null);
     }
 
-
     @Test
     public void addTaskTest() throws ValidationException {
         String date = "03.03.2019";
