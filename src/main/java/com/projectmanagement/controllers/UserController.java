@@ -21,13 +21,13 @@ public class UserController {
     }
 
     @GetMapping("{userId}")
-    public UserDto getUser(@PathVariable Long userId) throws ValidationException {
-        return userService.getUser(userId);
+    public ResponseEntity<UserDto> getUser(@PathVariable Long userId) throws ValidationException {
+        return ResponseEntity.ok(userService.getUser(userId));
     }
 
     @GetMapping("email/{userEmail}")
-    public UserDto getUserByEmail(@PathVariable String userEmail) throws ValidationException {
-        return userService.getUserByEmail(userEmail);
+    public ResponseEntity<UserDto> getUserByEmail(@PathVariable String userEmail) throws ValidationException {
+        return ResponseEntity.ok(userService.getUserByEmail(userEmail));
     }
 
     @GetMapping("user/{userId}")

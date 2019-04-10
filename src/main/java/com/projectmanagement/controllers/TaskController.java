@@ -25,12 +25,17 @@ public class TaskController {
      }
 
      @GetMapping("{taskId}")
-     public TaskDto getTask(@PathVariable Long taskId) throws ValidationException {
-         return taskService.getTask(taskId);
+     public ResponseEntity<TaskDto> getTask(@PathVariable Long taskId) throws ValidationException {
+         return ResponseEntity.ok(taskService.getTask(taskId));
      }
 
      @PostMapping(value = "create", consumes = MediaType.APPLICATION_JSON_VALUE)
      public void createTask(@RequestBody TaskDto taskDto) throws ValidationException {
          taskService.create(taskDto);
      }
+
+    @DeleteMapping(value = "/delete", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public void deleteTask(@RequestBody TaskDto taskDto) throws ValidationException {
+        taskService.delete(taskDto.getId());
+    }
 }

@@ -116,4 +116,9 @@ public class TaskService {
                 .collect(Collectors.toList());
     }
 
+    public void delete(Long taskId) throws ValidationException {
+        validateIsNotNull(taskId, "delete: taskId == NULL!!!");
+        taskDao.delete(taskId);
+    }
+
 }

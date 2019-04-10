@@ -20,8 +20,8 @@ public class ProjectController {
     }
 
     @GetMapping("{projectId}")
-    public ProjectDto getProject(@PathVariable Long projectId) throws ValidationException {
-       return  projectService.getProject(projectId);
+    public ResponseEntity<ProjectDto> getProject(@PathVariable Long projectId) throws ValidationException {
+       return ResponseEntity.ok(projectService.getProject(projectId));
     }
 
     @GetMapping("user/{creatorId}")
