@@ -58,6 +58,29 @@ public class ProjectServiceTest {
     }
 
     @Test(expected = ValidationException.class)
+    public void getAllNullProjectsByCreatorId() throws ValidationException {
+        given(projectDao.findAllByCreatorId(1L)).willReturn(null);
+        projectService.getListByCreatorId(1L);
+    }
+
+    @Test
+    public void getAllProjectsByCreatorIdTest() throws ValidationException {
+        Project project = new Project(1L,       1L,   "",
+                                     null, null,   ProjectStatus.OPEN,
+                                      setTasks());
+        ProjectDto projectDto = new ProjectDto(1L,      1L, "",
+                                            null,   null, ProjectStatus.OPEN,
+                                            setTaskDtos());
+        given(projectDao.findAllByCreatorId(1L)).willReturn(List.of(project));
+
+        List<ProjectDto> actualProjects = projectService.getListByCreatorId(1L);
+        List<ProjectDto> expectedProjects = List.of(projectDto);
+
+        assertThat(actualProjects).isEqualTo(expectedProjects);
+
+    }
+
+    @Test(expected = ValidationException.class)
     public void nullProjectCreateTest() throws ValidationException {
         projectService.create(null);
     }

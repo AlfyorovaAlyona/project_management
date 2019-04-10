@@ -29,23 +29,23 @@ public class UserService {
 
     public UserDto getUser(Long userId) throws ValidationException {
         //Creating user with null id is unacceptable
-        validateIsNotNull(userId, "userId == NULL!!!");
+        validateIsNotNull(userId, "getUser: userId == NULL!!!");
 
         User user = userDao.findOne(userId);
         /*If the user with id = userId exists
          * then we build a userDto from this User
          */
-        validateIsNotNull(user, "No user with id: " + userId);
+        validateIsNotNull(user, "getUser: No user with id: " + userId);
 
         return buildUserDtoFromUser(user);
     }
 
     public UserDto getUserByEmail(String userEmail) throws ValidationException {
         // Creating user with null email is unacceptable
-        validateIsNotNull(userEmail, "userEmail == NULL!!!");
+        validateIsNotNull(userEmail, "getUserByEmail: userEmail == NULL!!!");
 
         User user = userDao.findByEmail(userEmail);
-        validateIsNotNull(user, "No user with userEmail: " + userEmail);
+        validateIsNotNull(user, "getUserByEmail: No user with userEmail: " + userEmail);
 
         return buildUserDtoFromUser(user);
     }
@@ -207,4 +207,29 @@ public class UserService {
         return list;
     }
 
+    public List<TaskDto> getTasksOfUserBYUserId(Long userId) throws ValidationException {
+        validateIsNotNull(userId, "getTasksOfUserBYUserId: userId == NULL!!");
+
+        User user = userDao.findOne(userId);
+        validateIsNotNull(user, "getTasksOfUserBYUserId: No user with id: " + userId);
+        validateIsNotNull(user.getTasks(), "getTasksOfUserBYUserId: User with id: "
+                + userId + "has no tasks");
+
+        List<Task> tasks = user.getTasks();
+        return tasks.stream()
+                .map(this::buildTaskDtoFromTask)
+                .collect(Collectors.toList());
+    }
+
+    private TaskDto buildTaskDtoFromTask(Task task) {
+        TaskDto taskDto = new TaskDto();
+        taskDto.setId(task.getId());
+        taskDto.setStatus(task.getStatus());
+        taskDto.setDescription(task.getDescription());
+        taskDto.setDeadline(task.getDeadline());
+        taskDto.setName(task.getName());
+        taskDto.setSalary(task.getSalary());
+        taskDto.setProjectId(task.getProjectId());
+        return taskDto;
+    }
 }

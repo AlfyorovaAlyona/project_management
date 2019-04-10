@@ -144,6 +144,17 @@ public class UserServiceTest {
         assertThat(actualUser).isEqualTo(List.of(expectedUser));
     }
 
+    @Test
+    public void getTasksOfUserBYUserIdTest() throws ValidationException {
+        User user = new User(1L, "@", "", "", setTasks(), setProjects());
+        given(userDao.findOne(1L)).willReturn(user);
+        List<TaskDto> actualTaskDtos = userService.getTasksOfUserBYUserId(1L);
+
+        List<TaskDto> expectedTaskDtos = setTaskDtos();
+
+        assertThat(actualTaskDtos).isEqualTo(expectedTaskDtos);
+    }
+
     private List<Task> setTasks() {
         Task task1 = new Task(1L,           "good task", TaskStatus.NOT_STARTED,
                         "do nothing", BigDecimal.ONE, null,

@@ -62,7 +62,6 @@ public class ProjectService {
                 .collect(Collectors.toList());
     }
 
-
     public Project create(ProjectDto projectDto) throws ValidationException {
         projectDtoIsValid(projectDto);
 

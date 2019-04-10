@@ -5,7 +5,10 @@ import com.projectmanagement.dtos.TaskDto;
 import com.projectmanagement.dtos.UserDto;
 import com.projectmanagement.services.UserService;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("user")
@@ -25,6 +28,12 @@ public class UserController {
     @GetMapping("email/{userEmail}")
     public UserDto getUserByEmail(@PathVariable String userEmail) throws ValidationException {
         return userService.getUserByEmail(userEmail);
+    }
+
+    @GetMapping("user/{userId}")
+    public ResponseEntity<List<TaskDto>> getTasksOfUserByUserId(@PathVariable Long userId)
+            throws ValidationException {
+        return ResponseEntity.ok(userService.getTasksOfUserBYUserId(userId));
     }
 
     @PostMapping(value = "addTask", consumes = MediaType.APPLICATION_JSON_VALUE)
