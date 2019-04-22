@@ -2,8 +2,15 @@ package com.projectmanagement.dtos;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import com.projectmanagement.common.serialization.LocalDateTimeDeserializer;
+import com.projectmanagement.common.serialization.ZonedDateTimeDeserializer;
 import com.projectmanagement.entities.enums.ProjectStatus;
 
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -28,9 +35,11 @@ public class ProjectDto {
     @Setter
     private String name;
 
+    @JsonDeserialize(using = ZonedDateTimeDeserializer.class)
+    @JsonSerialize(using = ToStringSerializer.class)
     @Getter
     @Setter
-    private Date deadline;
+    private ZonedDateTime deadline;
 
     @Getter
     @Setter
@@ -45,7 +54,7 @@ public class ProjectDto {
     private List<TaskDto> tasks;
 
     public ProjectDto(Long id,       Long creatorId,     String name,
-                      Date deadline, String description, ProjectStatus projectStatus,
+                      ZonedDateTime deadline, String description, ProjectStatus projectStatus,
                       List<TaskDto> tasks) {
         this.creatorId = creatorId;
         this.deadline = deadline;

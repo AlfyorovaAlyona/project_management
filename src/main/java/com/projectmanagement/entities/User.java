@@ -10,7 +10,7 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @Table (name = "users")
-@ToString(exclude = {"tasks", "projects"})
+@ToString (exclude = {"tasks", "projects"})
 @EqualsAndHashCode (exclude = {"projects", "tasks"})
 public class User {
 

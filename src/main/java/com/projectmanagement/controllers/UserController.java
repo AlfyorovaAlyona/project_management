@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("user")
+@RequestMapping("users")
 public class UserController {
 
     private UserService userService;
@@ -30,19 +30,16 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserByEmail(userEmail));
     }
 
-    @GetMapping("user/{userId}")
+    @GetMapping("tasks/{userId}")
     public ResponseEntity<List<TaskDto>> getTasksOfUserByUserId(@PathVariable Long userId)
             throws ValidationException {
-        return ResponseEntity.ok(userService.getTasksOfUserBYUserId(userId));
+        return ResponseEntity.ok(userService.getTasksOfUserByUserId(userId));
     }
 
     @PostMapping(value = "addTask", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void addTask(@RequestBody TaskDto taskDto) throws ValidationException {
+    public ResponseEntity addTask(@RequestBody TaskDto taskDto) throws ValidationException {
         userService.addTaskToUser(taskDto);
+        return ResponseEntity.ok(null);
     }
 
-    @DeleteMapping(value = "removeTask", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void removeTask(@RequestBody TaskDto taskDto) throws ValidationException {
-        userService.removeTaskFromUser(taskDto);
-    }
 }

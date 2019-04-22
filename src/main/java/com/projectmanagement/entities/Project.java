@@ -2,6 +2,8 @@ package com.projectmanagement.entities;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -37,7 +39,7 @@ public class Project {
     @Column(name = "deadline")
     @Getter
     @Setter
-    private Date deadline;
+    private ZonedDateTime deadline;
 
     @Column(name = "description")
     @Getter
@@ -60,7 +62,7 @@ public class Project {
     @Setter
     private List<Task> tasks;
 
-    public Project(Long id, Long creatorId, String name, Date deadline, String description,
+    public Project(Long id, Long creatorId, String name, ZonedDateTime deadline, String description,
                    ProjectStatus projectStatus, List<Task> tasks) {
         this.id = id;
         this.creatorId = creatorId;

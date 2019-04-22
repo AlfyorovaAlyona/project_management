@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("project")
+@RequestMapping("projects")
 public class ProjectController {
 
     private ProjectService projectService;
@@ -22,6 +22,11 @@ public class ProjectController {
     @GetMapping("{projectId}")
     public ResponseEntity<ProjectDto> getProject(@PathVariable Long projectId) throws ValidationException {
        return ResponseEntity.ok(projectService.getProject(projectId));
+    }
+
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<ProjectDto>> getProjects() throws ValidationException {
+        return ResponseEntity.ok(projectService.getProjects());
     }
 
     @GetMapping("user/{creatorId}")

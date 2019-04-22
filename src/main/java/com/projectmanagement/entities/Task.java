@@ -3,7 +3,8 @@ package com.projectmanagement.entities;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
-import java.util.Calendar;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -44,7 +45,7 @@ public class Task {
     @Column(name = "deadline")
     @Getter
     @Setter
-    private Date deadline;
+    private ZonedDateTime deadline;
 
     @Column(name = "project_id")
     @NotNull
@@ -64,7 +65,7 @@ public class Task {
     }
 
     public Task(Long id, String name,  TaskStatus taskStatus, String description,
-                BigDecimal salary, Date deadline, Long projectId) {
+                BigDecimal salary, ZonedDateTime deadline, Long projectId) {
         this.id = id;
         this.description = description;
         this.deadline = deadline;
@@ -75,7 +76,7 @@ public class Task {
     }
 
     public Task(Long id, String name,  TaskStatus taskStatus, String description,
-                BigDecimal salary, Date deadline, Long projectId, List<User> users) {
+                BigDecimal salary, ZonedDateTime deadline, Long projectId, List<User> users) {
         this.id = id;
         this.description = description;
         this.deadline = deadline;

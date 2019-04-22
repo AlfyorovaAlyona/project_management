@@ -53,10 +53,10 @@ public class UserService {
     private UserDto buildUserDtoFromUser(User user) {
         UserDto userDto = new UserDto();
         userDto.setId(user.getId());
+        userDto.setTasks(buildTaskDtoListFromTaskList(user.getTasks()));
         userDto.setEmail(user.getEmail());
         userDto.setName(user.getName());
         userDto.setSurname(user.getSurname());
-        userDto.setTasks(buildTaskDtoListFromTaskList(user.getTasks()));
         userDto.setProjects(buildProjectDtoListFromProjectList(user.getProjects()));
         return userDto;
     }
@@ -119,6 +119,7 @@ public class UserService {
 
     private List<User> buildUserListFromUserIdList(TaskDto taskDto) throws ValidationException {
         List<User> users = new ArrayList<>();
+        //taskDto.setUserIds(List.of(1L));
         List<Long> userIds = taskDto.getUserIds();
         for (Long userId : userIds) {
             User user = userDao.findOne(userId);
@@ -146,71 +147,11 @@ public class UserService {
         return task;
     }
 
-
-    public List<User> removeTaskFromUser(TaskDto taskDto) throws ValidationException {
-        taskDtoIsValid(taskDto);
-        validateIsNotNull(taskDto.getUsers(), "No user doing this task!");
-
-        List<UserDto> userDtos = buildUserDtoListFromUserIdList(taskDto);
-        List<User> users = new ArrayList<>();
-
-        for (UserDto userDto : userDtos) {
-                validateIsNotNull(userDto.getTasks(), "userDto has no task");
-                if (userDto.getProjects() == null) {
-                    userDto.setProjects(new ArrayList<>());
-                }
-
-                List<TaskDto> taskDtos = userDto.getTasks();
-                if (taskDtos.contains(taskDto))
-                    userDto.setTasks(buildTaskListWithRemovedTask(taskDtos, taskDto));
-                else {
-                    throw new ValidationException("userDto has no such taskDto");
-                }
-                List<UserDto> userDtoList = taskDto.getUsers();
-                if (userDtoList.contains(userDto)) {
-                   taskDto.setUsers(buildUserDtoListWithRemovedUser(userDtoList, userDto));
-                } else {
-                    throw new ValidationException("taskDto has no such userDto");
-                }
-                User user = buildUserFromUserDto(userDto);
-                users.add(user);
-                userDao.save(user);
-        }
-        return users;
-    }
-
-    private List<UserDto> buildUserDtoListFromUserIdList(TaskDto taskDto) throws ValidationException {
-        List<UserDto> userDtos = new ArrayList<>();
-        for (Long userId : taskDto.getUserIds()) {
-            User user = userDao.findOne(userId);
-            UserDto userDto = buildUserDtoFromUser(user);
-            validateIsNotNull(user, "No user with id: " + userId);
-            userDtos.add(userDto);
-        }
-        return userDtos;
-    }
-
-    private User buildUserFromUserDto(UserDto userDto) {
-        return new User(userDto.getId(),   userDto.getEmail(),
-                        userDto.getName(), userDto.getSurname());
-    }
-
-    private List<UserDto> buildUserDtoListWithRemovedUser(List<UserDto> userDtos, UserDto userDto) {
-        List<UserDto> list = new ArrayList<>(userDtos);
-        list.remove(userDto);
-        return list;
-    }
-
-    private List<TaskDto> buildTaskListWithRemovedTask(List<TaskDto> tasks, TaskDto removedTask) {
-        List<TaskDto> list = new ArrayList<>(tasks);
-        list.remove(removedTask);
-        return list;
-    }
-
-    public List<TaskDto> getTasksOfUserBYUserId(Long userId) throws ValidationException {
+    public List<TaskDto> getTasksOfUserByUserId(Long userId) throws ValidationException {
         validateIsNotNull(userId, "getTasksOfUserBYUserId: userId == NULL!!");
+        Long userId1 = 1L;
 
-        User user = userDao.findOne(userId);
+        User user = userDao.findOne(userId1);
         validateIsNotNull(user, "getTasksOfUserBYUserId: No user with id: " + userId);
         validateIsNotNull(user.getTasks(), "getTasksOfUserBYUserId: User with id: "
                 + userId + "has no tasks");

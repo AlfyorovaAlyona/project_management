@@ -13,4 +13,5 @@ public  interface ProjectDao extends CrudRepository<Project,Long> {
     /*@Query("SELECT project from Project project " +
             "where project.creatorId = :creatorId")*/
     List<Project> findAllByCreatorId(Long creatorId);
+    List<Project> findAllBy();
 }

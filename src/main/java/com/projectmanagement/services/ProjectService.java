@@ -41,13 +41,22 @@ public class ProjectService {
         return buildProjectDtoFromProject(project);
     }
 
+    public List<ProjectDto> getProjects() throws ValidationException {
+        List<Project> projects = projectDao.findAllBy();
+        validateIsNotNull(projects, "getProjects: No projects at all");
+
+        return projects.stream()
+                .map(this::buildProjectDtoFromProject)
+                .collect(Collectors.toList());
+    }
+
     private ProjectDto buildProjectDtoFromProject(Project project) {
         ProjectDto projectDto = new ProjectDto();
         projectDto.setId(project.getId());
         projectDto.setName(project.getName());
         projectDto.setCreatorId(project.getCreatorId());
         projectDto.setDeadline(project.getDeadline());
-        project.setDescription(project.getDescription());
+        projectDto.setDescription(project.getDescription());
         projectDto.setStatus(project.getStatus());
         projectDto.setTasks(buildTaskDtoListFromTaskList(project.getTasks()));
         return projectDto;
@@ -105,8 +114,9 @@ public class ProjectService {
 
     public List<ProjectDto> getListByCreatorId(Long creatorId) throws ValidationException {
         validateIsNotNull(creatorId, "Creator Id is NULL!!!");
+        Long userId = 1L;
 
-        List<Project> projects = projectDao.findAllByCreatorId(creatorId);
+        List<Project> projects = projectDao.findAllByCreatorId(userId);
         validateIsNotNull(projects, "No projects for user with id: " + creatorId);
 
         //todo validate that current user is equal to the one mentioned in project

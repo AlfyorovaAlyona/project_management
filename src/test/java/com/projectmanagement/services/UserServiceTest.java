@@ -17,6 +17,8 @@ import org.mockito.MockitoAnnotations;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -90,65 +92,22 @@ public class UserServiceTest {
         assertThat(actualUser).isEqualTo(List.of(expectedUser));
     }
 
-    private Date setDate(String stringDate) {
+    private ZonedDateTime setDate(String stringDate) {
         SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
-        Date date = null;
+        ZonedDateTime date = null;
         try {
-            date = format.parse(stringDate);
+            date = ZonedDateTime.parse(stringDate);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return date;
     }
 
-    @Test(expected = ValidationException.class)
-    public void removeNullTaskTest() throws ValidationException {
-        userService.removeTaskFromUser(null);
-    }
-
-    @Test(expected = ValidationException.class)
-    public void removeTaskFromNullUsersTest() throws ValidationException {
-        TaskDto taskDto = new TaskDto(2L, null,     "no task", TaskStatus.NOT_STARTED,
-                                "", BigDecimal.ONE, null,    1L);
-        userService.removeTaskFromUser(taskDto);
-    }
-
-    @Test(expected = ValidationException.class)
-    public void removeNotFoundTask() throws ValidationException {
-        User user = new User(1L, "@", "", "", setTasks(), setProjects());
-        given(userDao.findOne(1L)).willReturn(user);
-        UserDto userDto = new UserDto(1L, "@", "", "", setTaskDtos(), setProjectDtos());
-        TaskDto removedTaskDto = new TaskDto(1L,    List.of(1L),    "", TaskStatus.IN_PROGRESS,
-                                        "", null, null, 1L,
-                                         List.of(userDto));
-        userService.removeTaskFromUser(removedTaskDto);
-    }
-
-
-    @Test
-    public void removeTaskFromUserTest() throws ValidationException {
-        User user = new User(1L, "@", "", "", setTasks(), setProjects());
-        given(userDao.findOne(1L)).willReturn(user);
-
-        UserDto userDto = new UserDto(1L, "@", "", "", setTaskDtos(), setProjectDtos());
-        TaskDto removedTaskDto = new TaskDto(1L,     List.of(1L),   "good task", TaskStatus.NOT_STARTED,
-                                "do nothing", BigDecimal.ONE, null,     1L,
-                                         List.of(userDto));
-        List<User> actualUser = userService.removeTaskFromUser(removedTaskDto);
-
-        Task task2 = new Task(2L,                 "bad task",   TaskStatus.IN_PROGRESS,
-                            "do something", BigDecimal.ONE,    null,
-                            1L);
-        User expectedUser = new User(1L, "@", "", "", List.of(task2), setProjects());
-
-        assertThat(actualUser).isEqualTo(List.of(expectedUser));
-    }
-
     @Test
     public void getTasksOfUserBYUserIdTest() throws ValidationException {
         User user = new User(1L, "@", "", "", setTasks(), setProjects());
         given(userDao.findOne(1L)).willReturn(user);
-        List<TaskDto> actualTaskDtos = userService.getTasksOfUserBYUserId(1L);
+        List<TaskDto> actualTaskDtos = userService.getTasksOfUserByUserId(1L);
 
         List<TaskDto> expectedTaskDtos = setTaskDtos();
 

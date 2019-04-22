@@ -2,17 +2,24 @@ package com.projectmanagement.dtos;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import com.projectmanagement.common.serialization.LocalDateTimeDeserializer;
+import com.projectmanagement.common.serialization.ZonedDateTimeDeserializer;
 import com.projectmanagement.entities.User;
 import com.projectmanagement.entities.enums.TaskStatus;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@EqualsAndHashCode (exclude = {"users", "userIds"})
+@EqualsAndHashCode (exclude = {"users", "userIds", "deadline"})
 @NoArgsConstructor
 @ToString (exclude = {"users", "userIds"})
 public class TaskDto {
@@ -29,9 +36,11 @@ public class TaskDto {
     @Setter
     private BigDecimal salary;
 
+    @JsonDeserialize(using = ZonedDateTimeDeserializer.class)
+    @JsonSerialize(using = ToStringSerializer.class)
     @Getter
     @Setter
-    private Date deadline;
+    private ZonedDateTime deadline;
 
     @Getter
     @Setter
@@ -55,7 +64,7 @@ public class TaskDto {
     private List<Long> userIds;
 
     public TaskDto(Long id, String name,  TaskStatus taskStatus, String description,
-                   BigDecimal salary, Date deadline, Long projectId) {
+                   BigDecimal salary, ZonedDateTime deadline, Long projectId) {
         this.id = id;
         this.deadline = deadline;
         this.name = name;
@@ -66,7 +75,7 @@ public class TaskDto {
     }
 
     public TaskDto(Long id, String name, TaskStatus taskStatus, String description,
-                   BigDecimal salary, Date deadline, Long projectId, List<UserDto> users) {
+                   BigDecimal salary, ZonedDateTime deadline, Long projectId, List<UserDto> users) {
         this.id = id;
         this.statusCode = taskStatus.getValue();
         this.deadline = deadline;
@@ -78,7 +87,7 @@ public class TaskDto {
     }
 
     public TaskDto(Long id, List<Long> userIds, String name, TaskStatus taskStatus, String description,
-                   BigDecimal salary, Date deadline, Long projectId) {
+                   BigDecimal salary, ZonedDateTime deadline, Long projectId) {
         this.id = id;
         this.statusCode = taskStatus.getValue();
         this.deadline = deadline;
@@ -90,7 +99,7 @@ public class TaskDto {
     }
 
     public TaskDto(Long id, List<Long> userIds, String name, TaskStatus taskStatus, String description,
-                   BigDecimal salary, Date deadline, Long projectId, List<UserDto> users) {
+                   BigDecimal salary, ZonedDateTime deadline, Long projectId, List<UserDto> users) {
         this.id = id;
         this.statusCode = taskStatus.getValue();
         this.deadline = deadline;
