@@ -16,10 +16,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
-import java.util.Date;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -93,7 +90,6 @@ public class UserServiceTest {
     }
 
     private ZonedDateTime setDate(String stringDate) {
-        SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
         ZonedDateTime date = null;
         try {
             date = ZonedDateTime.parse(stringDate);
@@ -112,6 +108,17 @@ public class UserServiceTest {
         List<TaskDto> expectedTaskDtos = setTaskDtos();
 
         assertThat(actualTaskDtos).isEqualTo(expectedTaskDtos);
+    }
+
+    @Test
+    public void createUserTest() throws ValidationException {
+        UserDto userDto = new UserDto(1L, "@", "", "",
+                                        setTaskDtos(), setProjectDtos());
+        User actualUser = userService.create(userDto);
+        User expectedUser = new User(1L, "@", "", "",
+                                        setTasks(),setProjects());
+
+        assertThat(actualUser).isEqualTo(expectedUser);
     }
 
     private List<Task> setTasks() {

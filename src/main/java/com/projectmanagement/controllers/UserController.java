@@ -42,4 +42,10 @@ public class UserController {
         return ResponseEntity.ok(null);
     }
 
+    @PostMapping(value = "createUser", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity createUser(@RequestBody UserDto userDto) throws ValidationException {
+        userService.create(userDto);
+        return ResponseEntity.ok(null);
+    }
+
 }

@@ -15,7 +15,6 @@ import java.util.List;
 @RequestMapping("tasks")
 public class TaskController {
     public static final Logger log = LoggerFactory.getLogger(TaskController.class);
-    private int counter = 0;
 
     private TaskService taskService;
 
@@ -25,7 +24,6 @@ public class TaskController {
 
      @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
      public ResponseEntity<List<TaskDto>> getAllTasks() throws ValidationException {
-         log.info(String.valueOf(++counter));
          return ResponseEntity.ok(taskService.getAll());
      }
 

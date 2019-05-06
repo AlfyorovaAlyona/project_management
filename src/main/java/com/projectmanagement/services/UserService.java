@@ -63,18 +63,18 @@ public class UserService {
 
     private List<TaskDto> buildTaskDtoListFromTaskList(List<Task> tasks) {
         return tasks.stream()
-                .map(task -> new TaskDto(task.getId(),          task.getName(),   task.getStatus(),
-                                         task.getDescription(), task.getSalary(), task.getDeadline(),
-                                         task.getProjectId()))
+                .map(task -> new TaskDto(task.getId(), task.getName(), task.getStatus(),
+                        task.getDescription(), task.getSalary(), task.getDeadline(),
+                        task.getProjectId()))
                 .collect(Collectors.toList());
     }
 
     private List<ProjectDto> buildProjectDtoListFromProjectList(List<Project> projects) {
         return projects.stream()
-                .map(project -> new ProjectDto(project.getId(),          project.getCreatorId(),
-                                               project.getName(),        project.getDeadline(),
-                                               project.getDescription(), project.getStatus(),
-                                               buildTaskDtoListFromTaskList(project.getTasks())))
+                .map(project -> new ProjectDto(project.getId(), project.getCreatorId(),
+                        project.getName(), project.getDeadline(),
+                        project.getDescription(), project.getStatus(),
+                        buildTaskDtoListFromTaskList(project.getTasks())))
                 .collect(Collectors.toList());
     }
 
@@ -172,5 +172,63 @@ public class UserService {
         taskDto.setSalary(task.getSalary());
         taskDto.setProjectId(task.getProjectId());
         return taskDto;
+    }
+
+    public User create(UserDto userDto) throws ValidationException {
+        userDtoIsValid(userDto);
+
+        if (userDto.getProjects() == null) {
+            userDto.setProjects(new ArrayList<>());
+        }
+
+        if (userDto.getTasks() == null) {
+            userDto.setTasks(new ArrayList<>());
+        }
+
+        User user = buildUserFromUserDto(userDto);
+        userDao.save(user);
+        return user;
+    }
+
+    private void userDtoIsValid(UserDto userDto) throws ValidationException {
+        validateIsNotNull(userDto, "create User: UserDto == NULL!!!");
+        validateIsNotNull(userDto.getId(), "create User: userId == NULL!!");
+        validateIsNotNull(userDto.getEmail(), "create User: userEmail == NULL!");
+        validateIsNotNull(userDto.getName(), "create User: user name == NULL");
+        validateIsNotNull(userDto.getSurname(), "create User: userSurname == NULL");
+    }
+
+    private User buildUserFromUserDto(UserDto userDto) {
+        User user = new User();
+        user.setId(userDto.getId());
+        user.setName(userDto.getName());
+        user.setSurname(userDto.getSurname());
+        user.setEmail(userDto.getEmail());
+        user.setTasks(buildTaskListFromTaskDtoList(userDto.getTasks()));
+        user.setProjects(buildProjectListFromProjectDtoList(userDto.getProjects()));
+        return user;
+    }
+
+    private List<Project> buildProjectListFromProjectDtoList(List<ProjectDto> projectDtos) {
+        return projectDtos.stream()
+                .map(this::buildProjectFromProjectDto)
+                .collect(Collectors.toList());
+    }
+
+    private Project buildProjectFromProjectDto(ProjectDto projectDto) {
+        Project project = new Project();
+        project.setName(projectDto.getName());
+        project.setDeadline(projectDto.getDeadline());
+        project.setStatus(projectDto.getStatus());
+        project.setCreatorId(projectDto.getCreatorId());
+        project.setDescription(projectDto.getDescription());
+        project.setTasks(buildTaskListFromTaskDtoList(projectDto.getTasks()));
+        return project;
+    }
+
+    private List<Task> buildTaskListFromTaskDtoList(List<TaskDto> taskDtos) {
+        return taskDtos.stream()
+                .map(this::buildTaskFromTaskDto)
+                .collect(Collectors.toList());
     }
 }
